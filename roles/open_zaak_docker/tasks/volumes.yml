@@ -1,0 +1,9 @@
+---
+
+- name: Set up the persistent storage
+  docker_volume:
+    name: openzaak-private-media
+  register: openzaak_volume
+
+- debug: msg="Private media volume '{{ openzaak_volume.volume.Mountpoint }}' created"
+  when: openzaak_volume.changed
