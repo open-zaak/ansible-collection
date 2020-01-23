@@ -1,0 +1,50 @@
+---
+
+# Kubernetes namespace to run in
+opennotificaties_namespace: open-notificaties
+opennotificaties_instance: prod
+
+# Ingress/routing details
+opennotificaties_domain: open-notificaties.gemeente.nl
+opennotificaties_use_traefik_crd: yes
+
+# Django config parameters
+opennotificaties_secret_key: override-me
+
+opennotificaties_db_username: open-notificaties
+opennotificaties_db_password: open-notificaties
+opennotificaties_db_host: localhost
+opennotificaties_db_port: 5432
+opennotificaties_db_name: open-notificaties
+
+opennotificaties_sentry_dsn: null
+
+opennotificaties_cache_db: 0
+opennotificaties_cache_resource_limits:
+  memory: "200Mi"
+  cpu: "250m"
+
+opennotificaties_version: latest
+opennotificaties_image: openzaak/open-notificaties:{{ opennotificaties_version }}
+opennotificaties_replicas: 3
+opennotificaties_worker_replicas: 3
+
+opennotificaties_resource_limits:
+  memory: "1Gi"
+  cpu: "500m"
+
+opennotificaties_celery_resource_limits:
+  memory: "1Gi"
+  cpu: "500m"
+
+opennotificaties_rabbitmq:
+  user: "opennotificaties-{{ opennotificaties_instance }}"
+  password: "opennotificaties-{{ opennotificaties_instance }}"
+
+opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@rabbitmq:5672/%2F"
+opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@rabbitmq:5672//"
+opennotificaties_celery_result_backend: "{{ opennotificaties_celery_broker_url }}"
+
+opennotificaties_rabbitmq_resource_limits:
+  memory: "200Mi"
+  cpu: "250m"
