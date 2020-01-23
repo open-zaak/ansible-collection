@@ -1,0 +1,43 @@
+---
+
+# Kubernetes namespace to run in
+openzaak_namespace: open-zaak
+openzaak_instance: prod
+
+# Ingress/routing details
+openzaak_domain: open-zaak.gemeente.nl
+openzaak_extra_hosts: []
+openzaak_use_traefik_crd: yes
+
+# Django config parameters
+openzaak_secret_key: override-me
+
+openzaak_db_name: open-zaak
+openzaak_db_host: localhost
+openzaak_db_port: 5432
+openzaak_db_username: open-zaak
+openzaak_db_password: open-zaak
+
+openzaak_sentry_dsn: null
+
+openzaak_cache_db: 0
+openzaak_cache_limits:
+  memory: "200Mi"
+  cpu: "250m"
+
+openzaak_version: latest
+openzaak_image: openzaak/open-zaak:{{ openzaak_version }}
+openzaak_replicas: 3
+
+openzaak_storage: 10Gi
+openzaak_storage_name: openzaak-files
+
+openzaak_resource_limits:
+  memory: "1Gi"
+  cpu: "1000m"
+
+openzaak_nginx_version: "1.17"
+openzaak_nginx_replicas: 2
+openzaak_nginx_resource_limits:
+  cpu: "500m"
+  memory: "500Mi"
