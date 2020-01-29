@@ -1,5 +1,4 @@
 galaxy_info:
-  role_name: open_zaak_k8s
   author: Maykin Media
   description: Install or update Open Zaak in Kubernetes
   company: Maykin Media

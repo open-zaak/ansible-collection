@@ -1,5 +1,4 @@
 galaxy_info:
-  role_name: open_notificaties_k8s
   author: Maykin Media
   description: Install or update Open Notificaties in Kubernetes
   company: Maykin Media

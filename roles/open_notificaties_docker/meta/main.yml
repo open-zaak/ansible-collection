@@ -1,5 +1,4 @@
 galaxy_info:
-  role_name: open_notificaties_docker
   author: Maykin Media
   description: Install or update Open Notificaties with Docker
   company: Maykin Media
@@ -24,15 +23,15 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
-        - 8
-        - 9
-        - 10
+        - jessie
+        - stretch
+        - buster
     - name: Ubuntu
       versions:
-        - 18.04
-        - 18.10
-        - 19.04
-        - 19.10
+        - bionic
+        - cosmic
+        - disco
+        - eoan
 
   galaxy_tags:
     - provision

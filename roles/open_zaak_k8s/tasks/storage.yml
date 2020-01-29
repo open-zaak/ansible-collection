@@ -15,4 +15,3 @@
         resources:
           requests:
             storage: "{{ openzaak_storage }}"
-

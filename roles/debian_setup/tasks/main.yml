@@ -1,6 +1,7 @@
 ---
 
-- package:
+- name: Install packages
+  package:
     name:
       - apt-transport-https
       - ca-certificates
@@ -17,7 +18,7 @@
 
 - name: Generating strong server-specific DH key (this may take >10 minutes on first run)
   command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096
-  when: has_dhparams.stat.exists == False
+  when: not has_dhparams.stat.exists
 
 - name: Set up postgresql debian repo (apt-key)
   apt_key:
