@@ -38,6 +38,8 @@
     pull: yes
     hostname: "{{ item.name }}"
     restart_policy: always
+    state: started
+    restart: "{{ opennotificaties_env_file_template.changed }}"
     networks:
       - name: opennotificaties
     purge_networks: yes
@@ -62,6 +64,8 @@
     pull: yes
     hostname: "{{ item.name }}"
     restart_policy: always
+    state: started
+    restart: "{{ opennotificaties_env_file_template.changed }}"
     networks:
       - name: opennotificaties
     purge_networks: yes

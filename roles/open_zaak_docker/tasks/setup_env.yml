@@ -14,4 +14,4 @@
     src: env.j2
     dest: /home/openzaak/.env
     mode: 0400
-  register: openzaak_env_file
+  register: openzaak_env_file_template

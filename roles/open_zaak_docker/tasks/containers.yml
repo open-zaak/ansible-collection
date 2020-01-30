@@ -20,7 +20,7 @@
     hostname: "{{ item.name }}"
     restart_policy: always
     state: started
-    restart: "{{ openzaak_env_file.changed }}"
+    restart: "{{ openzaak_env_file_template.changed }}"
     networks:
       - name: openzaak
     purge_networks: yes
