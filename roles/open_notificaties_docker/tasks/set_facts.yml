@@ -1,0 +1,5 @@
+---
+
+- name: Set the absolute path to the nginx template
+  set_fact:
+    opennotificaties_nginx_template: "{{ role_path }}/templates/opennotificaties.conf.j2"
