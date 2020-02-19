@@ -27,3 +27,6 @@ openzaak_replicas:
     port: 8001
   - name: openzaak-2
     port: 8002
+
+# used when fixing file permissions/user groups to read private media
+openzaak_nginx_user: "{{ nginx_main_template.user|default('nginx') }}"
