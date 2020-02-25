@@ -9,7 +9,7 @@
     restart_policy: always
     networks:
       - name: openzaak
-    purge_networks: yes
+    purge_networks: no
     networks_cli_compatible: yes
 
 - name: Run the Open Zaak backend service

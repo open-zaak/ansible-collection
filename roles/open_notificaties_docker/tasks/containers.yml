@@ -11,7 +11,7 @@
     restart_policy: always
     networks:
       - name: opennotificaties
-    purge_networks: yes
+    purge_networks: no
     networks_cli_compatible: yes
 
 - name: Run the RabbitMQ message broker
