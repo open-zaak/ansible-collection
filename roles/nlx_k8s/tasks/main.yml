@@ -1,0 +1,130 @@
+---
+
+# TODO: On changes of configmap -> ensure pods are updated/restarted (annotation?)
+# Start with single replica
+# Secret with private key org
+
+- name: Set up the required namespace
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ nlx_namespace }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  tags:
+    - inway
+    - outway
+
+- name: Set up Inway configmap
+  k8s:
+    state: present
+    name: inway
+    namespace: "{{ nlx_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      data:
+        service-config.toml: "{{ lookup('template', 'inway-config.toml.j2') }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  register: nlx_inway_config
+  tags:
+    - inway
+
+- name: Set up certificates
+  k8s:
+    state: present
+    name: certs
+    namespace: "{{ nlx_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      stringData:
+        root.crt: "{{ nlx_root_cert }}"
+        org.key: "{{ nlx_inway_key }}"
+        org.crt: "{{ nlx_inway_cert }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  tags:
+    - inway
+    - outway
+
+- name: Set up TX DB secrets
+  k8s:
+    state: present
+    name: txdb
+    namespace: "{{ nlx_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      stringData:
+        PGUSER: "{{ nlx_txlog_db_username }}"
+        PGPASSWORD: "{{ nlx_txlog_db_password }}"
+        TXLOG_ROLE_API: "{{ nlx_txlog_db_username_api }}"
+        TXLOG_ROLE_API_PASSWORD: "{{ nlx_txlog_db_password_api }}"
+        TXLOG_ROLE_WRITER: "{{ nlx_txlog_db_username_writer }}"
+        TXLOG_ROLE_WRITER_PASSWORD: "{{ nlx_txlog_db_password_writer }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  tags:
+    - inway
+    - outway
+
+- name: Set up inway service
+  k8s:
+    state: present
+    name: inway
+    namespace: "{{ nlx_namespace }}"
+    definition: "{{ lookup('template', 'inway-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  tags:
+    - inway
+
+- name: Install inway deployment
+  k8s:
+    state: present
+    name: inway
+    namespace: "{{ nlx_namespace }}"
+    definition: "{{ lookup('template', 'inway.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  vars:
+    config_version: nlx_inway_config.result.metadata.resourceVersion
+  tags:
+    - inway
+
+- name: Set up outway service
+  k8s:
+    state: present
+    name: outway
+    namespace: "{{ nlx_namespace }}"
+    definition: "{{ lookup('template', 'outway-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  tags:
+    - outway
+
+- name: Install outway deployment
+  k8s:
+    state: present
+    name: outway
+    namespace: "{{ nlx_namespace }}"
+    definition: "{{ lookup('template', 'outway.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  tags:
+    - outway

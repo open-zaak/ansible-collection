@@ -23,6 +23,14 @@ app_db_provision_user: yes
 app_db_provision_database: yes
 app_db_become_user: null
 
+app_db_extra_users: []
+# Example:
+#
+# app_db_extra_users:
+#   - name: username
+#     password: password
+#
+
 app_db_extra_packages:
   - postgis
 

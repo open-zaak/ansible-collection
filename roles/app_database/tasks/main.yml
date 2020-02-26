@@ -26,7 +26,20 @@
     port: "{{ app_db_port }}"
     login_user: "{{ app_db_login_user }}"
     login_password: "{{ app_db_login_password }}"
-  when: app_db_provision_user
+  when: app_db_provision_user and app_db_user != 'postgres'
+
+- name: Set up the extra database users
+  postgresql_user:
+    state: present
+    name: "{{ item.name | mandatory }}"
+    password: "{{ item.password | mandatory }}"
+
+    login_host: "{{ app_db_host }}"
+    port: "{{ app_db_port }}"
+    login_user: "{{ app_db_login_user }}"
+    login_password: "{{ app_db_login_password }}"
+  with_items: "{{ app_db_extra_users }}"
+  no_log: true
 
 - name: Set up the application database
   postgresql_db:

@@ -1,0 +1,108 @@
+---
+
+apiVersion: v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: outway
+    app.kubernetes.io/component: outway
+    app.kubernetes.io/part-of: nlx
+    app.kubernetes.io/instance: "{{ nlx_outway_version }}"
+    app.kubernetes.io/managed-by: Ansible
+spec:
+  replicas: {{ nlx_outway_replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: outway
+      app.kubernetes.io/part-of: nlx
+      app.kubernetes.io/instance: "{{ nlx_outway_version }}"
+  template:
+    metadata:
+      name: outway
+      labels:
+        app.kubernetes.io/name: outway
+        app.kubernetes.io/component: outway
+        app.kubernetes.io/part-of: nlx
+        app.kubernetes.io/instance: "{{ nlx_outway_version }}"
+        app.kubernetes.io/managed-by: Ansible
+    spec:
+      initContainers:
+        - name: transaction-db-migrations
+          image: "{{ nlx_txdb_migrations_image }}"
+          imagePullPolicy: Always
+          command: ['/usr/local/bin/upgrade-db.sh']
+          env:
+            - name: PGHOST
+              value: "{{ nlx_txlog_db_host }}"
+            - name: PGPORT
+              value: "{{ nlx_txlog_db_port }}"
+            - name: PGDATABASE
+              value: "{{ nlx_txlog_db_name }}"
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: txdb
+                  key: PGUSER
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: txdb
+                  key: PGPASSWORD
+            - name: TXLOG_ROLE_API
+              valueFrom:
+                secretKeyRef:
+                  name: txdb
+                  key: TXLOG_ROLE_API
+            - name: TXLOG_ROLE_WRITER
+              valueFrom:
+                secretKeyRef:
+                  name: txdb
+                  key: TXLOG_ROLE_WRITER
+
+      containers:
+        - name: outway
+          image: "{{ nlx_outway_image }}"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 30
+
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+
+          env:
+            - name: DIRECTORY_INSPECTION_ADDRESS
+              value: "{{ nlw_outway_directory_inspection_address }}"
+            - name: TLS_NLX_ROOT_CERT
+              value: "/certs/root.crt"
+            - name: TLS_ORG_CERT
+              value: "/certs/org.crt"
+            - name: TLS_ORG_KEY
+              value: "/certs/org.key"
+
+            - name: POSTGRES_DSN
+              value: "postgres://\
+              {{ nlx_txlog_db_username_writer }}:{{ nlx_txlog_db_password_writer }}\
+              @{{ nlx_txlog_db_host }}/{{ nlx_txlog_db_name }}\
+              ?sslmode=disable&connect_timeout=10"
+
+          volumeMounts:
+            - name: certs
+              mountPath: "/certs"
+      volumes:
+        - name: certs
+          secret:
+            secretName: certs
