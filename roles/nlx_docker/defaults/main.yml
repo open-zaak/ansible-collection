@@ -4,8 +4,7 @@
 nlx_inway_version: latest
 nlx_inway_image: nlxio/inway:{{ nlx_inway_version }}
 nlx_inway_replicas:
-  - name: inway-0
-    port: 8443
+  - inway-0
 nlx_inway_directory_registration_address: directory-registration-api.demo.nlx.io:443
 nlx_inway_self_address: inway.gemeente.nl:8443
 # Service config - which services are reachable through NLX?
@@ -44,6 +43,5 @@ nlx_inway_cert: "PROVIDE THIS YOURSELF"
 nlx_outway_version: latest
 nlx_outway_image: nlxio/outway:{{ nlx_outway_version }}
 nlx_outway_replicas:
-  - name: outway-0
-    port: 8080
+  - outway-0
 nlx_outway_directory_inspection_address: directory-inspection-api.demo.nlx.io:443

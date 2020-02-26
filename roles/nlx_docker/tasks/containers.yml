@@ -27,10 +27,10 @@
 
 - name: Run the NLX inway backend service
   docker_container:
-    name: "{{ item.name }}"
+    name: "{{ item }}"
     image: "{{ nlx_inway_image }}"
     pull: yes
-    hostname: "{{ item.name }}"
+    hostname: "{{ item }}"
     restart_policy: always
     state: started
     networks:
@@ -41,8 +41,6 @@
       - /var/run/postgresql:/var/run/postgresql
       - /home/nlx/service-config.toml:/inway-config/service-config.toml:ro
       - /home/nlx/certs:/certs:ro
-    ports:
-      - "127.0.0.1:{{ item.port }}:8443"
     env:
       # directory
       DIRECTORY_REGISTRATION_ADDRESS: "{{ nlx_inway_directory_registration_address }}"
@@ -66,10 +64,10 @@
 
 - name: Run the NLX outway backend service
   docker_container:
-    name: "{{ item.name }}"
+    name: "{{ item }}"
     image: "{{ nlx_outway_image }}"
     pull: yes
-    hostname: "{{ item.name }}"
+    hostname: "{{ item }}"
     restart_policy: always
     state: started
     networks:
@@ -79,8 +77,6 @@
     volumes:
       - /var/run/postgresql:/var/run/postgresql
       - /home/nlx/certs:/certs:ro
-    ports:
-      - "127.0.0.1:{{ item.port }}:8443"
     env:
       # directory
       DIRECTORY_INSPECTION_ADDRESS: "{{ nlx_outway_directory_inspection_address }}"
@@ -99,3 +95,23 @@
   with_items: "{{ nlx_outway_replicas }}"
   tags:
     - outway
+
+- name: Run the NLX load balancer (nginx)
+  docker_container:
+    name: nlx-load-balancer
+    image: nginx:1.17
+    pull: yes
+    restart_policy: always
+    state: started
+    networks:
+      - name: nlx
+    purge_networks: yes
+    networks_cli_compatible: yes
+    volumes:
+      - /home/nlx/load-balancer.conf:/etc/nginx/nginx.conf:ro
+    exposed_ports:
+      - "8080"
+      - "8443"
+    ports:
+      - "0.0.0.0:8443:8443"
+      - "0.0.0.0:8080:8080"

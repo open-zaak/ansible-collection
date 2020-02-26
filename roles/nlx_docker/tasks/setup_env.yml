@@ -17,4 +17,10 @@
   template:
     src: inway-config.toml.j2
     dest: /home/nlx/service-config.toml
-    mode: 0444
+    mode: 0644
+
+- name: Template out load-balancer config
+  template:
+    src: load-balancer.conf.j2
+    dest: /home/nlx/load-balancer.conf
+    mode: 0644
