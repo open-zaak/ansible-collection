@@ -1,0 +1,101 @@
+---
+
+- name: Run the txlog db migrations
+  docker_container:
+    name: nlx-txdb-migrations
+    image: "{{ nlx_txdb_migrations_image }}"
+    pull: yes
+    command: ['/usr/local/bin/upgrade-db.sh']
+    state: started
+    restart_policy: on-failure
+    restart_retries: 5
+    networks:
+      - name: nlx
+    purge_networks: yes
+    networks_cli_compatible: yes
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
+    env:
+      PGHOST: "{{ nlx_txlog_db_host }}"
+      PGPORT: "{{ nlx_txlog_db_port|string }}"
+      PGDATABASE: "{{ nlx_txlog_db_name }}"
+      PGUSER: "{{ nlx_txlog_db_username }}"
+      PGPASSWORD: "{{ nlx_txlog_db_password }}"
+      TXLOG_ROLE_API: "{{ nlx_txlog_db_username_api }}"
+      TXLOG_ROLE_WRITER: "{{ nlx_txlog_db_username_writer }}"
+  register: nlx_txlog_container
+
+- name: Run the NLX inway backend service
+  docker_container:
+    name: "{{ item.name }}"
+    image: "{{ nlx_inway_image }}"
+    pull: yes
+    hostname: "{{ item.name }}"
+    restart_policy: always
+    state: started
+    networks:
+      - name: nlx
+    purge_networks: yes
+    networks_cli_compatible: yes
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
+      - /home/nlx/service-config.toml:/inway-config/service-config.toml:ro
+      - /home/nlx/certs:/certs:ro
+    ports:
+      - "127.0.0.1:{{ item.port }}:8443"
+    env:
+      # directory
+      DIRECTORY_REGISTRATION_ADDRESS: "{{ nlx_inway_directory_registration_address }}"
+      SERVICE_CONFIG: /inway-config/service-config.toml
+      SELF_ADDRESS: "{{ nlx_inway_self_address }}"
+
+      # certificates
+      TLS_NLX_ROOT_CERT: /certs/root.crt
+      TLS_ORG_CERT: /certs/org.crt
+      TLS_ORG_KEY: /certs/org.key
+
+      # txlog db
+      # https://github.com/lib/pq/issues/796 -> why the ?host=
+      POSTGRES_DSN: "postgres://\
+      {{ nlx_txlog_db_username_writer }}:{{ nlx_txlog_db_password_writer }}\
+      @:{{ nlx_txlog_db_port }}/{{ nlx_txlog_db_name }}\
+      ?host={{ nlx_txlog_db_host }}&sslmode=disable&connect_timeout=10"
+  with_items: "{{ nlx_inway_replicas }}"
+  tags:
+    - inway
+
+- name: Run the NLX outway backend service
+  docker_container:
+    name: "{{ item.name }}"
+    image: "{{ nlx_outway_image }}"
+    pull: yes
+    hostname: "{{ item.name }}"
+    restart_policy: always
+    state: started
+    networks:
+      - name: nlx
+    purge_networks: yes
+    networks_cli_compatible: yes
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
+      - /home/nlx/certs:/certs:ro
+    ports:
+      - "127.0.0.1:{{ item.port }}:8443"
+    env:
+      # directory
+      DIRECTORY_INSPECTION_ADDRESS: "{{ nlx_outway_directory_inspection_address }}"
+
+      # certificates
+      TLS_NLX_ROOT_CERT: /certs/root.crt
+      TLS_ORG_CERT: /certs/org.crt
+      TLS_ORG_KEY: /certs/org.key
+
+      # txlog db
+      # https://github.com/lib/pq/issues/796 -> why the ?host=
+      POSTGRES_DSN: "postgres://\
+      {{ nlx_txlog_db_username_writer }}:{{ nlx_txlog_db_password_writer }}\
+      @:{{ nlx_txlog_db_port }}/{{ nlx_txlog_db_name }}\
+      ?host={{ nlx_txlog_db_host }}&sslmode=disable&connect_timeout=10"
+  with_items: "{{ nlx_outway_replicas }}"
+  tags:
+    - outway

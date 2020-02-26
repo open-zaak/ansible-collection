@@ -1,0 +1,20 @@
+---
+
+# Set up the environment files on the host machine
+- name: Create application group
+  group:
+    name: nlx
+
+- name: Create application user
+  user:
+    name: nlx
+    group: nlx
+    comment: Application user
+    create_home: yes
+    state: present
+
+- name: Set up the service config
+  template:
+    src: inway-config.toml.j2
+    dest: /home/nlx/service-config.toml
+    mode: 0444
