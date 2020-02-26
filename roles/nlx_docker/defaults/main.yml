@@ -1,0 +1,47 @@
+---
+
+# Inway
+nlx_inway_version: latest
+nlx_inway_image: nlxio/inway:{{ nlx_inway_version }}
+nlx_inway_replicas:
+  - inway-0
+nlx_inway_directory_registration_address: directory-registration-api.demo.nlx.io:443
+nlx_inway_self_address: inway.gemeente.nl:8443
+# Service config - which services are reachable through NLX?
+nlx_inway_services: []
+# Example:
+# nlx_inway_services:
+#   - name: zrc
+#     endpoint_url: http://gemma-zrc.k8s.dc1.proeftuin.utrecht.nl/api/v1
+#     documentation_url = "http://gemma-zrc.k8s.dc1.proeftuin.utrecht.nl"
+#     authorization_model = "none"
+#     api_specification_document_url = "http://gemma-zrc.k8s.dc1.proeftuin.utrecht.nl/api/v1/schema/openapi.json"
+
+# Transaction log DB
+nlx_txdb_migrations_image: nlxio/txlog-db:latest
+nlx_txlog_db_host: /var/run/postgresql
+nlx_txlog_db_port: 5432
+nlx_txlog_db_name: txlog-db
+nlx_txlog_db_username: nlx
+nlx_txlog_db_password: nlx  # override me!
+
+nlx_txlog_db_username_api: nlx-txlog-api
+nlx_txlog_db_password_api: nlx  # override me!
+nlx_txlog_db_username_writer: nlx-txlog-writer
+nlx_txlog_db_password_writer: nlx  # override me!
+
+# Certificates
+
+# Demo network root certificate
+nlx_root_cert: "{{ lookup('url', 'https://certportal.demo.nlx.io/root.crt') }}"
+
+# Follow https://docs.nlx.io/try-nlx/retrieve-a-demo-certificate/
+nlx_inway_key: "PROVIDE THIS YOURSELF"
+nlx_inway_cert: "PROVIDE THIS YOURSELF"
+
+# Outway
+nlx_outway_version: latest
+nlx_outway_image: nlxio/outway:{{ nlx_outway_version }}
+nlx_outway_replicas:
+  - outway-0
+nlx_outway_directory_inspection_address: directory-inspection-api.demo.nlx.io:443
