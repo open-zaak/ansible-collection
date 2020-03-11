@@ -19,6 +19,8 @@
     src: inway-config.toml.j2
     dest: /home/nlx/service-config.toml
     mode: 0644
+  notify:
+    - restart inway
 
 - name: Template out load-balancer config
   template:
