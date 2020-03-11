@@ -12,6 +12,7 @@
     comment: Application user
     create_home: yes
     state: present
+  register: nlx_app_user
 
 - name: Set up the service config
   template:

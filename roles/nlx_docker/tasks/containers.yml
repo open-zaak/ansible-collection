@@ -28,6 +28,7 @@
 - name: Run the NLX inway backend service
   docker_container:
     name: "{{ item }}"
+    user: "{{ nlx_app_user.uid }}"
     image: "{{ nlx_inway_image }}"
     pull: yes
     hostname: "{{ item }}"
@@ -65,6 +66,7 @@
 - name: Run the NLX outway backend service
   docker_container:
     name: "{{ item }}"
+    user: "{{ nlx_app_user.uid }}"
     image: "{{ nlx_outway_image }}"
     pull: yes
     hostname: "{{ item }}"
