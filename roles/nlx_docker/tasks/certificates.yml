@@ -8,7 +8,7 @@
     owner: nlx
     group: nlx
     recurse: no
-    mode: o=rwx,g=rx,o-rwx
+    mode: o=rwx,g=rx,o=rx
 
 - name: Install certificates
   copy:
