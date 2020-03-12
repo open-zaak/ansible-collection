@@ -90,7 +90,7 @@ server {
         proxy_pass http://openzaak;
     }
 
-    location /private-media {
+    location /private-media/ {
         internal;
         alias {{ openzaak_volume_path | mandatory }};
     }
