@@ -25,3 +25,27 @@
     name: "{{ openzaak_nginx_user }}"
     groups: openzaak
     state: present
+
+# /var/lib/docker/volumes is by default only enter-able by the root user. However,
+# nginx on the host system serves the files for private media uploads, which runs as
+# the nginx user.
+# Therefore, we change the group of /var/lib/docker/volumes to add the +x permission,
+# and add nginx to that group.
+
+- name: Create group to enter docker volumes directory
+  group:
+    name: enter-docker-volumes
+    state: present
+
+- name: Ensure nginx user can enter docker volumes
+  user:
+    name: nginx
+    groups: enter-docker-volumes
+    append: yes
+
+- name: Ensure user group can enter docker volumes directory
+  file:
+    path: /var/lib/docker/volumes
+    state: directory
+    group: enter-docker-volumes
+    mode: g=x
