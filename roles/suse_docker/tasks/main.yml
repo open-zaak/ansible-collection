@@ -1,0 +1,16 @@
+---
+
+# Note that for SLES, the container module must be enabled via SUSEConnect
+# prior to setting up Docker.
+
+- name: SUSE | Install Docker
+  zypper:
+    name: docker
+    state: present
+    update_cache: yes
+
+- name: SUSE | Ensure Docker daemon is running and starts at boot
+  service:
+    name: docker
+    state: started
+    enabled: yes
