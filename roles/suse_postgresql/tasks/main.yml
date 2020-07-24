@@ -1,0 +1,16 @@
+---
+
+# This role is best used in tandem with geerlingguy.postgresql.
+# The Geerling Guy role supports installation on Debian, Ubuntu and RedHat-like systems,
+# but not (Open)SUSE Linux.
+#
+# The second aspect is cluster initialization and provisioning the users and databases,
+# which is OS-independent.
+#
+# This role focuses solely on the cluster installation.
+
+# Variable configuration.
+- import_tasks: variables.yml
+
+# Perform the installation
+- import_tasks: install.yml

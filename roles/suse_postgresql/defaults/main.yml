@@ -1,0 +1,6 @@
+---
+
+# PostgreSQL 10 is the only PG version with postgis packages in the official
+# repositories. PG 10 should work, as it provides JSONField.
+
+# postgresql_version: "10"
