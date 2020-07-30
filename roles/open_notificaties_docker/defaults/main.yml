@@ -4,6 +4,7 @@
 
 opennotificaties_domain: "{{ inventory_hostname }}"
 opennotificaties_ssl: "{{ certbot_create_if_missing | default(yes) | bool }}"
+opennotificaties_nginx_proto_value: '$scheme'
 
 opennotificaties_secret_key: override-me
 

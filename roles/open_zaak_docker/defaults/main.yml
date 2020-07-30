@@ -2,6 +2,7 @@
 
 openzaak_domain: "{{ inventory_hostname }}"
 openzaak_ssl: yes
+openzaak_nginx_proto_value: '$scheme'
 
 openzaak_secret_key: override-me
 

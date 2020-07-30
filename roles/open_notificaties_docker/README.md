@@ -12,8 +12,24 @@ Requirements
 Role Variables
 --------------
 
-See `./defaults/main.yml`:
+### SSL related
 
+```yaml
+opennotificaties_ssl: yes
+opennotificaties_nginx_proto_value: '$scheme'
+```
+
+`opennotificaties_ssl` indicates whether Open Zaak is supposedly accessed over HTTPS (only).
+Publicly accessible Open Zaak installations may not be exposed over plain HTTP.
+
+`opennotificaties_nginx_proto_value` by default looks at the connection scheme of the client.
+However, in configurations where SSL termination is performed _before_ nginx (because of
+multiple reverse proxies, for example), you should set this to `'"https"'` otherwise
+Open Zaak is incorrectly told it's accessed over `http` rather than `https`.
+
+### Other
+
+See `./defaults/main.yml` for the remainder.
 Dependencies
 ------------
 
