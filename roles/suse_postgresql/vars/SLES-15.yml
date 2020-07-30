@@ -1,3 +1,7 @@
 ---
 __postgresql_version: "10"
-__postgresql_geo_repository: "http://download.opensuse.org/repositories/Application:/Geo/SLE_15_SP1_Backports/"
+__postgresql_postgis_repositories:
+  - name: Application:Geo
+    repo: http://download.opensuse.org/repositories/Application:/Geo/SLE_15_SP1_Backports/
+  - name: science
+    repo: http://download.opensuse.org/repositories/science/SLE_15_SP1/

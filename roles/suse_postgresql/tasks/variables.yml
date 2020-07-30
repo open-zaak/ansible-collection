@@ -8,10 +8,10 @@
   include_vars: "SLES-{{ ansible_distribution_major_version }}.yml"
   when: ansible_distribution != 'openSUSE Leap'
 
-- name: Define postgresql_geo_repository
+- name: Define postgresql_postgis_repositories
   set_fact:
-    postgresql_geo_repository: "{{ __postgresql_geo_repository }}"
-  when: postgresql_geo_repository is not defined
+    postgresql_postgis_repositories: "{{ __postgresql_postgis_repositories }}"
+  when: postgresql_postgis_repositories is not defined
 
 - name: Define postgresql_version.
   set_fact:

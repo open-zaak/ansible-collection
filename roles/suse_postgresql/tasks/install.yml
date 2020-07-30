@@ -6,14 +6,14 @@
 #     repo: "{{ postgresql_repository }}"
 #     state: present
 
-# Geo package repo required for postgis package
-- name: DB | Add geo package repository
+- name: DB | Add geo package repositories
   zypper_repository:
-    name: "Application:Geo"
-    repo: "{{ postgresql_geo_repository }}"
+    name: "{{ item.name }}"
+    repo: "{{ item.repo }}"
     state: present
     runrefresh: yes
     auto_import_keys: yes
+  with_items: "{{ postgresql_postgis_repositories }}"
 
 - name: Install PostgreSQL
   zypper:
