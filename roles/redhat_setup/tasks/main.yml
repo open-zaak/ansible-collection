@@ -1,0 +1,7 @@
+---
+
+- name: Enable PostgreSQL repo
+  yum:
+    name: "https://yum.postgresql.org/{{ postgresql_version }}/redhat/rhel-{{ redhat_setup_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
+  when: postgresql_version is defined
