@@ -4,6 +4,9 @@ Debian setup
 Prepare a Debian-based system for the `*_docker` roles and PostgreSQL server
 installation.
 
+It is recommended to rather use the `os_setup` role in this collection, which will
+invoke this role.
+
 Requirements
 ------------
 

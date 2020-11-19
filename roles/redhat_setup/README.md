@@ -4,6 +4,9 @@ Red Hat setup
 This role prepares a Red Hat target machine for Docker-based deployments of the Open
 Zaak ecosystem.
 
+It is recommended to rather use the `os_setup` role in this collection, which will
+invoke this role.
+
 Requirements
 ------------
 
