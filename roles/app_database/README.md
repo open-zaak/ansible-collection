@@ -1,5 +1,5 @@
-App databse
-===========
+App database
+============
 
 Provision the application database.
 

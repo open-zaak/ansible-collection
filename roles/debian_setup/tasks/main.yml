@@ -24,8 +24,10 @@
   apt_key:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     state: present
+  when: postgresql_version is defined
 
 - name: Set up postgresql debian repo (apt-repository)
   apt_repository:
     repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
     state: present
+  when: postgresql_version is defined
