@@ -1,7 +1,25 @@
 ---
 
-- name: Enable PostgreSQL repo
+- name: Enable PostgreSQL repo (RHEL/CentOS 7)
   yum:
-    name: "https://yum.postgresql.org/{{ postgresql_version }}/redhat/rhel-{{ redhat_setup_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    name: "https://yum.postgresql.org/{{ postgresql_version }}/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
     state: present
-  when: postgresql_version is defined
+  when: postgresql_version is defined and redhat_setup_version == "7"
+
+- name: Enable PostgreSQL repo (RHEL/CentOS 8)
+  dnf:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
+  when: postgresql_version is defined and redhat_setup_version == "8"
+
+- name: Install pip (RHEL/CentOS 7)
+  yum:
+    name: python2-pip
+    state: present
+  when: redhat_setup_version == "7"
+
+- name: Install pip (RHEL/CentOS 8)
+  dnf:
+    name: python2-pip
+    state: present
+  when: redhat_setup_version == "8"
