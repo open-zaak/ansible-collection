@@ -24,3 +24,10 @@ version (11 by default, configurable through the `postgresql_version` variable).
 ## Docker
 
 Centos 7 has Docker 1.13 in its repositories, which is fairly outdated.
+
+The Ansible role `geerlingguy.docker` installs Docker from CentOS repositories. This
+*may* have implications for Redhat support since you are using a different channel
+for the package installation. RedHat itself will probably give no official support
+on this.
+
+At the time of writing this documentation, Docker CE 19.03 is installed.
