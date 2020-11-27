@@ -110,3 +110,7 @@ spec:
 {% endif %}
 
 
+{% for envvar in openzaak_extra_env %}
+          - name: "{{ envvar.name }}"
+            value: "{{ envvar.value }}"
+{% endfor %}

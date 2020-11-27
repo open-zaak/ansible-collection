@@ -15,7 +15,22 @@ Additionally, you need a PostgreSQL database for the application data.
 Role Variables
 --------------
 
-See `./defaults/main.yml`:
+### Environment variables
+
+You can specify extra environment variables to include, for example to enable the
+CMIS integration for the documents API.
+
+```yaml
+openzaak_extra_env:
+  - name: CMIS_ENABLED
+    value: "no"
+```
+
+Any entry in this list is added to the deployment environment variables.
+
+### Other role variables
+
+See `./defaults/main.yml` for the remainder.
 
 Dependencies
 ------------

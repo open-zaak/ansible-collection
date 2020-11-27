@@ -25,6 +25,8 @@ openzaak_cache_limits:
   memory: "200Mi"
   cpu: "250m"
 
+openzaak_extra_env: []
+
 openzaak_version: latest
 openzaak_image: openzaak/open-zaak:{{ openzaak_version }}
 openzaak_replicas: 3
