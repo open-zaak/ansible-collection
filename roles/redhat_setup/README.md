@@ -25,7 +25,7 @@ Dependencies
 
 None
 
-Exmaple Playbook
+Example Playbook
 ----------------
 
 ```yaml
