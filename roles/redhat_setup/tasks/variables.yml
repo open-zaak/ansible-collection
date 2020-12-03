@@ -1,0 +1,5 @@
+---
+
+- name: Include RedHat/CentOS specific PostgreSQL variables
+  include_vars: postgres.yml
+  when: postgresql_version is defined

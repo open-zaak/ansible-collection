@@ -1,0 +1,4 @@
+---
+
+os_setup_docker: yes
+os_setup_db: yes

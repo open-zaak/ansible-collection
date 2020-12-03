@@ -1,0 +1,17 @@
+---
+
+- include_role:
+    name: debian_setup
+  when: ansible_os_family == 'Debian'
+
+- include_role:
+    name: redhat_setup
+  when: ansible_os_family == 'RedHat'
+
+- include_role:
+    name: suse_postgresql
+  when: ansible_os_family == 'Suse' and os_setup_db
+
+- include_role:
+    name: suse_docker
+  when: ansible_os_family == 'Suse' and os_setup_docker

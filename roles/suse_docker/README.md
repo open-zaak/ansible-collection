@@ -3,6 +3,9 @@ Docker runtime on SUSE Linux
 
 Install the Docker runtime on Suse Linux.
 
+It is recommended to rather use the `os_setup` role in this collection, which will
+invoke this role.
+
 Requirements
 ------------
 
