@@ -23,6 +23,19 @@ RHEL/CentOS 7
 <host> ansible_python_interpreter=/usr/bin/python2
 ```
 
+RHEL/CentOS 8
+
+```
+<host> ansible_python_interpreter=/usr/bin/python3
+```
+
+Note that you must also have pip installed, which is usually at `/usr/bin/pip3`. If it's
+not present, make sure to install it:
+
+```bash
+dnf install python3-pip
+```
+
 Role Variables
 --------------
 
