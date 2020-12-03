@@ -1,25 +1,9 @@
 ---
 
-- name: Enable PostgreSQL repo (RHEL/CentOS 7)
-  yum:
-    name: "https://yum.postgresql.org/{{ postgresql_version }}/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-    state: present
-  when: postgresql_version is defined and ansible_distribution_major_version == "7"
-
-- name: Enable PostgreSQL repo (RHEL/CentOS 8)
-  dnf:
-    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-    state: present
-  when: postgresql_version is defined and ansible_distribution_major_version == "8"
-
-- name: Install pip (RHEL/CentOS 7)
-  yum:
-    name: python2-pip
-    state: present
+- name: Run RHEL/CentOS 7 Postgres setup
+  import_tasks: repos-7.yml
   when: ansible_distribution_major_version == "7"
 
-- name: Install pip (RHEL/CentOS 8)
-  dnf:
-    name: python2-pip
-    state: present
+- name: Run RHEL/CentOS 8 Postgres setup
+  import_tasks: repos-8.yml
   when: ansible_distribution_major_version == "8"

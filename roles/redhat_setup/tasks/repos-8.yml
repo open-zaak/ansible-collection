@@ -1,0 +1,36 @@
+---
+
+# RHEL/CentOS 8
+
+- name: Install RPM key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+  when: postgresql_version is defined
+
+- name: Enable PostgreSQL repo's (RHEL/CentOS 8)
+  ansible.builtin.dnf:
+    name:
+      - "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+      - dnf-plugins-core
+    state: present
+  when: postgresql_version is defined
+
+# see https://github.com/ansible/ansible/issues/46963#issuecomment-722999113
+- name: Enable CentOS8 PowerTools repo
+  # NB: doesn't run command  `dnf config-manager --set-enabled PowerTools` as can't make that idempotent
+  lineinfile:
+    path: /etc/yum.repos.d/CentOS-PowerTools.repo
+    create: false # so raise error if not already installed
+    regexp: enabled=
+    line: enabled=1
+  when: postgresql_version is defined
+
+- name: Disable built-in PostgreSQL module
+  # NB: doesn't run command  `dnf -qy module disable postgresql` as can't make that idempotent
+  lineinfile:
+    path: /etc/dnf/modules.d/postgresql.module
+    create: false # so raise error if not already installed
+    regexp: state=
+    line: state=disabled
+  when: postgresql_version is defined

@@ -10,8 +10,18 @@ invoke this role.
 Requirements
 ------------
 
-A Red Hat Enterprise Linux (RHEL) or CentOS based system. RHEL/CentOS 7 are actively
-tested, and the role *should* work on RHEL/CentOS 8.
+A Red Hat Enterprise Linux (RHEL) or CentOS based system.
+
+The role has been tested against CentOS 7 and 8, and *should* work on RHEL 7/8.
+
+In your inventory, ensure to specify the appropriate Python version, depending on the
+OS version:
+
+RHEL/CentOS 7
+
+```
+<host> ansible_python_interpreter=/usr/bin/python2
+```
 
 Role Variables
 --------------
