@@ -16,7 +16,9 @@ openzaak_cache_db: 0
 
 openzaak_sentry_dsn: null
 
+openzaak_env_template: env.j2
 openzaak_env_file: /home/openzaak/.env
+openzaak_extra_env: []
 
 openzaak_version: latest
 openzaak_image: openzaak/open-zaak:{{ openzaak_version }}

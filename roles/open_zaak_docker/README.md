@@ -27,6 +27,23 @@ However, in configurations where SSL termination is performed _before_ nginx (be
 multiple reverse proxies, for example), you should set this to `'"https"'` otherwise
 Open Zaak is incorrectly told it's accessed over `http` rather than `https`.
 
+### Environment variables
+
+You can specify extra environment variables to include, for example to enable the
+CMIS integration for the documents API.
+
+```yaml
+openzaak_extra_env:
+  - name: CMIS_ENABLED
+    value: "no"
+```
+
+Any entry in this list is added in order to the bottom of the `.env` file being
+templated out.
+
+Alternatively, you can override `openzaak_env_template` and specify a different `.env`
+template file alltogether.
+
 ### Other
 
 See `./defaults/main.yml` for the remainder.

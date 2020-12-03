@@ -15,7 +15,7 @@
 
 - name: Setup the environment variables
   template:
-    src: env.j2
+    src: "{{ openzaak_env_template }}"
     dest: /home/openzaak/.env
     mode: 0400
   register: openzaak_env_file_template
