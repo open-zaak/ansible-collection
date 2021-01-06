@@ -15,7 +15,7 @@ server {
 
 server {
     server_tokens off;
-    listen {% if opennotificaties_ssl %}443 ssl{% else %}80{% endif %};
+    listen {% if opennotificaties_ssl %}443 ssl http2{% else %}80{% endif %};
     server_name {{ opennotificaties_domain }};
     client_max_body_size 4G;
 
@@ -63,8 +63,6 @@ server {
     add_header Strict-Transport-Security max-age=15768000;
     add_header X-XSS-Protection "1; mode=block";
     add_header X-Content-Type-Options nosniff;
-
-    ssl on;
 
     # Note: If using a certificate bundle ensure that the _first_ certificate
     # in the bundle corresponds with the private key.
