@@ -1,5 +1,15 @@
 ---
 
+- name: Determine the ssl_cert path
+  set_fact:
+    opennotificaties_nginx_ssl_certificate: "/etc/letsencrypt/live/{{ opennotificaties_domain }}/fullchain.pem"
+  when: opennotificaties_nginx_ssl_certificate is not defined and opennotificaties_letsencrypt_enabled
+
+- name: Determine the ssl_key path
+  set_fact:
+    opennotificaties_nginx_ssl_key: "/etc/letsencrypt/live/{{ opennotificaties_domain }}/privkey.pem"
+  when: opennotificaties_nginx_ssl_key is not defined and opennotificaties_letsencrypt_enabled
+
 - name: Set the absolute path to the nginx template
   set_fact:
     opennotificaties_nginx_template: "{{ role_path }}/templates/opennotificaties.conf.j2"
