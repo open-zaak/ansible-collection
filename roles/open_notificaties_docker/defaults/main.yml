@@ -28,6 +28,7 @@ opennotificaties_sentry_dsn: null
 # Docker
 
 opennotificaties_env_file: /home/opennotificaties/.env
+opennotificaties_extra_env: []
 
 opennotificaties_version: latest
 opennotificaties_image: openzaak/open-notificaties:{{ opennotificaties_version }}
