@@ -27,6 +27,37 @@ However, in configurations where SSL termination is performed _before_ nginx (be
 multiple reverse proxies, for example), you should set this to `'"https"'` otherwise
 Open Zaak is incorrectly told it's accessed over `http` rather than `https`.
 
+#### TLS certificates
+
+When `opennotificaties_ssl` is `true`, the paths to the TLS key and certificate chain
+must be provided. You can use your own certificates, or make use of Let's Encrypt to
+obtain SSL certificates.
+
+**Let's Encrypt**
+
+The `opennotificaties_letsencrypt_enabled` variable is available. When enabled, the key
+and certificate will be sourced from `/etc/letsencrypt/live/{{ opennotificaties_domain }}`.
+
+The variable is `true` by default if the variable `certbot_certs` is defined (from the
+`geerlingguy.certbot` role). If you're not using this role, you can specify it
+explicitly:
+
+```yaml
+opennotificaties_letsencrypt_enabled: yes
+```
+
+**Own certificates**
+
+You must explicitly specify the paths:
+
+```yaml
+opennotificaties_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
+opennotificaties_nginx_ssl_key: /path/to/ssl-key.pem
+```
+
+Note that the certificate chain must include the certificate + all intermediate
+certificates. The first certificate must correspond with the private key.
+
 ### Other
 
 See `./defaults/main.yml` for the remainder.
