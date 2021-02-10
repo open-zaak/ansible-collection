@@ -35,4 +35,5 @@
       DB_HOST: "{{ openzaak_db_host }}"
       DB_PORT: "{{ openzaak_db_port | string }}"
       SECRET_KEY: "{{ openzaak_secret_key }}"
+      SUBPATH: "{{ openzaak_subpath }}"
   with_items: "{{ openzaak_replicas }}"

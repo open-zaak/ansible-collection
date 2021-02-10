@@ -3,6 +3,7 @@
 # Default variables for Open Notificaties role on pure Docker.
 
 opennotificaties_domain: "{{ inventory_hostname }}"
+opennotificaties_subpath: /
 opennotificaties_ssl: "{{ certbot_create_if_missing | default(yes) | bool }}"
 opennotificaties_nginx_proto_value: '$scheme'
 opennotificaties_letsencrypt_enabled: "{[ opennotificaties_ssl and cerbot_certs is defined }}"

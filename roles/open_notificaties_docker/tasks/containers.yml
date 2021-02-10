@@ -55,6 +55,7 @@
       RABBITMQ_HOST: message-broker
       RABBITMQ_PORT: '5672'
       SECRET_KEY: "{{ opennotificaties_secret_key }}"
+      SUBPATH: "{{ opennotificaties_subpath }}"
   with_items: "{{ opennotificaties_replicas }}"
 
 - name: Run the Open Notificaties background workers
@@ -79,5 +80,6 @@
       RABBITMQ_HOST: message-broker
       RABBITMQ_PORT: '5672'
       SECRET_KEY: "{{ opennotificaties_secret_key }}"
+      SUBPATH: "{{ opennotificaties_subpath }}"
     command: ["/celery_worker.sh"]
   with_items: "{{ opennotificaties_worker_replicas }}"

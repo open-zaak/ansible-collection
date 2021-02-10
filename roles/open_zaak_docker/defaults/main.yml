@@ -1,6 +1,7 @@
 ---
 
 openzaak_domain: "{{ inventory_hostname }}"
+openzaak_subpath: /
 openzaak_ssl: yes
 openzaak_nginx_proto_value: '$scheme'
 openzaak_letsencrypt_enabled: "{[ openzaak_ssl and cerbot_certs is defined }}"
