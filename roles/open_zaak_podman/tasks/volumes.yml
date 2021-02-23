@@ -1,0 +1,21 @@
+---
+
+- name: Set up the persistent storage
+  containers.podman.podman_volume:
+    name: openzaak-private-media
+  register: openzaak_volume
+  notify:
+    - print volume mountpoint
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
+
+- debug: msg="Private media volume '{{ openzaak_volume.volume.Mountpoint }}'"
+
+- name: Set volume permissions
+  file:
+    path: "{{ openzaak_volume.volume.Mountpoint }}"
+    state: directory
+    owner: openzaak
+    group: openzaak
+    recurse: no
+    mode: u=rwx,g=rx,o-rwx

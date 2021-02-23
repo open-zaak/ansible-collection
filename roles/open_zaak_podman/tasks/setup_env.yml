@@ -1,0 +1,51 @@
+---
+
+# Set up the environment files on the host machine
+- name: Create application group
+  group:
+    name: openzaak
+
+- name: Create application user
+  user:
+    name: openzaak
+    group: openzaak
+    comment: Application user
+    create_home: yes
+    state: present
+
+- name: Setup the environment variables
+  template:
+    src: "{{ openzaak_env_template }}"
+    dest: /home/openzaak/.env
+    mode: 0400
+  register: openzaak_env_file_template
+
+- name: Ensure nginx user exists
+  user:
+    name: "{{ openzaak_nginx_user }}"
+    groups: openzaak
+    state: present
+
+# /home/podman/.local/share/containers/storage/volumes is by default only enter-able by
+# the podman user. However, nginx on the host system serves the files for private media
+# uploads, which runs as the nginx user.
+# Therefore, we change the group of /home/podman/.local/share/containers/storage/volumes
+# to add the +x permission, and add nginx to that group.
+
+- name: Create group to enter container volumes directory
+  group:
+    name: enter-container-volumes
+    state: present
+
+- name: Ensure nginx user can enter container volumes
+  user:
+    name: nginx
+    groups: enter-container-volumes
+    append: yes
+
+- name: Ensure user group can enter container volumes directory
+  file:
+    path: "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes/"
+    state: directory
+    group: enter-container-volumes
+    mode: g=x

@@ -1,0 +1,4 @@
+---
+
+- name: print volume mountpoint
+  debug: msg="Private media volume '{{ openzaak_volume.volume.Mountpoint }}' created"

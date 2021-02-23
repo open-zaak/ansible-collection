@@ -1,0 +1,7 @@
+---
+
+- name: Set up the openzaak podman network
+  containers.podman.podman_network:
+    name: openzaak
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
