@@ -1,29 +1,27 @@
 ---
 
 # Set up the environment files on the host machine
-- name: Create application group
-  group:
-    name: openzaak
 
-- name: Create application user
-  user:
-    name: openzaak
-    group: openzaak
-    comment: Application user
-    create_home: yes
-    state: present
+- name: Create application configuration directory
+  file:
+    path: /home/{{ openzaak_podman_user }}/openzaak/
+    state: directory
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
 
 - name: Setup the environment variables
   template:
     src: "{{ openzaak_env_template }}"
-    dest: /home/openzaak/.env
-    mode: 0400
+    dest: /home/{{ openzaak_podman_user }}/openzaak/.env
+    mode: u=rwx,g-rwx,o-rwx
   register: openzaak_env_file_template
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
 
 - name: Ensure nginx user exists
   user:
     name: "{{ openzaak_nginx_user }}"
-    groups: openzaak
+    groups: "{{ openzaak_podman_user }}"
     state: present
 
 # /home/podman/.local/share/containers/storage/volumes is by default only enter-able by

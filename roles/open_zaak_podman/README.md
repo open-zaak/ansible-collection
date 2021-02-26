@@ -9,13 +9,16 @@ Requirements
 ------------
 
 - A PostgreSQL database
-- Podman installed and configured for rootless containers
+- Podman installed and configured for rootless containers (see also
+  https://github.com/containers/podman/tree/v2.2.1-rhel/contrib/rootless-cni-infra)
 - `python3-devel` or equivalent package and dev tools (requires `gcc`)
 - the [`containers.podman`](https://galaxy.ansible.com/containers/podman) collection:
   ```bash
   $ ansible-galaxy collection install containers.podman
   ```
 - systemd (optional)
+
+
 
 Note that this role conflicts with the `open_zaak_docker` role!
 

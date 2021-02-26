@@ -8,6 +8,8 @@ openzaak_letsencrypt_enabled: "{[ openzaak_ssl and cerbot_certs is defined }}"
 # openzaak_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
 # openzaak_nginx_ssl_key: /path/to/ssl-key.pem
 
+openzaak_podman_user: podman
+
 openzaak_secret_key: override-me
 
 openzaak_db_port: 5432
@@ -21,7 +23,7 @@ openzaak_cache_db: 0
 openzaak_sentry_dsn: null
 
 openzaak_env_template: env.j2
-openzaak_env_file: /home/openzaak/.env
+openzaak_env_file: "/home/{{ openzaak_podman_user }}/openzaak/.env"
 openzaak_extra_env: []
 
 openzaak_version: latest
@@ -38,4 +40,3 @@ openzaak_replicas:
 # used when fixing file permissions/user groups to read private media
 openzaak_nginx_user: "{{ nginx_main_template.user|default('nginx') }}"
 
-openzaak_podman_user: podman
