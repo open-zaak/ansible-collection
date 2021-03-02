@@ -2,3 +2,10 @@
 
 - name: print volume mountpoint
   debug: msg="Private media volume '{{ openzaak_volume.volume.Mountpoint }}' created"
+
+- name: restart openzaak
+  systemd:
+    name: pod-openzaak.service
+    state: restarted
+    scope: user
+  remote_user: "{{ openzaak_podman_user }}"

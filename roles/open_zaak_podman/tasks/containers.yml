@@ -1,5 +1,8 @@
 ---
 
+# All containers are running in a single podman pod, which eliminates the need for a
+# separate network.
+
 - name: Create pod for containers
   containers.podman.podman_pod:
     name: openzaak
@@ -7,13 +10,16 @@
     ports: "{{ lookup('template', 'pod_ports.yml.j2') | from_yaml }}"
   become: yes
   become_user: "{{ openzaak_podman_user }}"
+  register: openzaak_pod
 
 - name: Run the cache service
   containers.podman.podman_container:
     name: openzaak-cache
     pod: openzaak
     image: docker.io/library/redis:5
-    restart_policy: always
+    state: present  # do not start them - this is managed through systemd
+  notify:
+    - restart openzaak
   become: yes
   become_user: "{{ openzaak_podman_user }}"
 
@@ -22,12 +28,12 @@
     name: "{{ item.name }}"
     pod: openzaak
     image: "{{ openzaak_image }}"
-    restart_policy: always
-    state: started
-    restart: "{{ openzaak_env_file_template.changed }}"
+    state: present  # do not start them - this is managed through systemd
     volumes:
       - /var/run/postgresql:/var/run/postgresql
       - openzaak-private-media:/app/private-media
+    # userns: keep-id -> does not work with pods, see
+    # https://github.com/containers/podman/issues/6843#issuecomment-653016772
     env_file: "{{ openzaak_env_file }}"
     env:
       UWSGI_PORT: "{{ item.port }}"
@@ -36,5 +42,14 @@
       SECRET_KEY: "{{ openzaak_secret_key }}"
       SUBPATH: "{{ openzaak_subpath }}"
   with_items: "{{ openzaak_replicas }}"
+  notify:
+    - restart openzaak
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
+
+- name: Ensure the pod is stopped - state is managed via systemd
+  containers.podman.podman_pod:
+    name: openzaak
+    state: stopped
   become: yes
   become_user: "{{ openzaak_podman_user }}"

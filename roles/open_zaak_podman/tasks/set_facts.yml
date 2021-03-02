@@ -1,0 +1,15 @@
+---
+
+- name: Determine the ssl_cert path
+  set_fact:
+    openzaak_nginx_ssl_certificate: "/etc/letsencrypt/live/{{ openzaak_domain }}/fullchain.pem"
+  when: openzaak_nginx_ssl_certificate is not defined and openzaak_letsencrypt_enabled
+
+- name: Determine the ssl_key path
+  set_fact:
+    openzaak_nginx_ssl_key: "/etc/letsencrypt/live/{{ openzaak_domain }}/privkey.pem"
+  when: openzaak_nginx_ssl_key is not defined and openzaak_letsencrypt_enabled
+
+- name: Set the absolute path to the nginx template
+  set_fact:
+    openzaak_nginx_template: "{{ role_path }}/templates/openzaak.conf.j2"
