@@ -16,7 +16,7 @@
     mode: u=rwx,g-rwx,o-rwx
   register: openzaak_env_file_template
   notify:
-    - - restart openzaak
+    - restart openzaak
   become: yes
   become_user: "{{ openzaak_podman_user }}"
 

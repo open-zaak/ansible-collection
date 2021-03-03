@@ -12,8 +12,6 @@
   file:
     path: "/home/{{ openzaak_podman_user }}/.config/systemd/user"
     state: directory
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
 
 - name: Template out systemd unit file
   template:
@@ -21,14 +19,12 @@
     dest: "/home/{{ openzaak_podman_user }}/.config/systemd/user/pod-openzaak.service"
   vars:
     user_id: "{{ getent_passwd[openzaak_podman_user][1] }}"
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
+  register: openzaak_systemd_unit
 
 - name: Enable linger
   command: loginctl enable-linger
   args:
     creates: "/var/lib/systemd/linger/{{ openzaak_podman_user }}"
-  remote_user: "{{ openzaak_podman_user }}"
 
 - name: Enable service
   systemd:
@@ -36,4 +32,4 @@
     state: started
     enabled: yes
     scope: user
-  remote_user: "{{ openzaak_podman_user }}"
+    daemon_reload: "{{ openzaak_systemd_unit.changed }}"

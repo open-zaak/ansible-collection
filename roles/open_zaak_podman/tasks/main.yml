@@ -3,9 +3,16 @@
 - import_tasks: setup_env.yml
 
 - import_tasks: dependencies.yml
+
 - import_tasks: volumes.yml
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
+
 - import_tasks: containers.yml
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: systemd.yml
+  remote_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: set_facts.yml

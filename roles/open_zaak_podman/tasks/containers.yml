@@ -8,11 +8,9 @@
     name: openzaak
     state: created
     ports: "{{ lookup('template', 'pod_ports.yml.j2') | from_yaml }}"
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
   register: openzaak_pod
 
-- name: Run the cache service
+- name: Create the cache service
   containers.podman.podman_container:
     name: openzaak-cache
     pod: openzaak
@@ -20,10 +18,8 @@
     state: present  # do not start them - this is managed through systemd
   notify:
     - restart openzaak
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
 
-- name: Run the Open Zaak backend service
+- name: Create the Open Zaak backend service
   containers.podman.podman_container:
     name: "{{ item.name }}"
     pod: openzaak
@@ -44,12 +40,20 @@
   with_items: "{{ openzaak_replicas }}"
   notify:
     - restart openzaak
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
 
-- name: Ensure the pod is stopped - state is managed via systemd
-  containers.podman.podman_pod:
+- name: Get pod state
+  containers.podman.podman_pod_info:
     name: openzaak
-    state: stopped
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
+  register: openzaak_pods
+
+# State is managed via systemd, which needs the PIDFILE, so we stop the pod (which
+# stops the containers). The tasks in systemd.yaml ensure that the service is running.
+# Note that there is a bug where stopped pods are destroyed, thereby breaking the
+# infra container ID reference, see:
+# https://github.com/containers/ansible-podman-collections/issues/215
+- name: Ensure the pod is stopped
+  command: podman pod stop openzaak
+  when: openzaak_pods.pods[0].State == "Running"
+  # containers.podman.podman_pod:
+  #   name: openzaak
+  #   state: stopped
