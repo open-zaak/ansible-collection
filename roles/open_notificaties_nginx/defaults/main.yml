@@ -1,0 +1,21 @@
+---
+
+opennotificaties_nginx_proto_value: '$scheme'
+
+opennotificaties_letsencrypt_enabled: "{[ opennotificaties_ssl and cerbot_certs is defined }}"
+# opennotificaties_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
+# opennotificaties_nginx_ssl_key: /path/to/ssl-key.pem
+
+# example: "frame-ancestors 'self' https://*.haarlem.nl;          report-uri https://haarlem.report-uri.com/r/d/csp/enforce"
+# see: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+opennotificaties_csp: ''
+
+opennotificaties_generate_dhparam: no
+
+# SSL Labs testing decreased the rating from A+ to B in January 2020 for servers supporting TLS 1.0 or 1.1
+opennotificaties_ssl_protocols: 'TLSv1.2 TLSv1.3'
+
+opennotificaties_ssl_prefer_server_ciphers: 'off'
+opennotificaties_ssl_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;'
+
+opennotificaties_ssl_hsts: 'max-age=63072000'

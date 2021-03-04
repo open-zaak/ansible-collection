@@ -1,5 +1,8 @@
 ---
 
+- import_tasks: dhparam.yml
+  when: opennotificaties_generate_dhparam
+
 - name: Determine the ssl_cert path
   set_fact:
     opennotificaties_nginx_ssl_certificate: "/etc/letsencrypt/live/{{ opennotificaties_domain }}/fullchain.pem"
