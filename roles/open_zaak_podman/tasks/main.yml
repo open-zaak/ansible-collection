@@ -16,3 +16,7 @@
   remote_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: set_facts.yml
+
+# load the nginx template
+- import_role:
+    name: openzaak.deploy.open_zaak_nginx

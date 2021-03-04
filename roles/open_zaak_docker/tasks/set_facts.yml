@@ -9,7 +9,3 @@
   set_fact:
     openzaak_nginx_ssl_key: "/etc/letsencrypt/live/{{ openzaak_domain }}/privkey.pem"
   when: openzaak_nginx_ssl_key is not defined and openzaak_letsencrypt_enabled
-
-- name: Set the absolute path to the nginx template
-  set_fact:
-    openzaak_nginx_template: "{{ role_path }}/templates/openzaak.conf.j2"
