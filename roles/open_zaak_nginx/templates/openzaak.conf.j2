@@ -51,23 +51,35 @@ server {
 
     {% if openzaak_ssl %}
 
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Disable SSLv3 for security reasons
+    ssl_protocols {{ openzaak_ssl_protocols }}; # Disable SSLv3 for security reasons
     ssl_session_timeout 1d;
     ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
 
-    ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:!DSS';
+    ssl_ciphers '{{ openzaak_ssl_ciphers }}';
+    ssl_prefer_server_ciphers {{ openzaak_ssl_prefer_server_ciphers }};
 
-    ssl_prefer_server_ciphers on;
+    {% if openzaak_generate_dhparam %}
     ssl_dhparam /etc/ssl/certs/dhparam.pem;
+    {% endif %}
 
-    add_header Strict-Transport-Security max-age=15768000;
+    {% if openzaak_csp %}
+    add_header Content-Security-Policy "{{ openzaak_csp }}";
+    {% endif %}
+    add_header Feature-Policy "autoplay 'none'; camera 'none'" always;
+    add_header Referrer-Policy "same-origin";
+    add_header Strict-Transport-Security "{{ openzaak_ssl_hsts }}" always;
+    add_header X-Content-Type-Options "nosniff";
     add_header X-XSS-Protection "1; mode=block";
-    add_header X-Content-Type-Options nosniff;
 
     # Note: If using a certificate bundle ensure that the _first_ certificate
     # in the bundle corresponds with the private key.
     ssl_certificate {{ openzaak_nginx_ssl_certificate | mandatory }};
     ssl_certificate_key {{ openzaak_nginx_ssl_key | mandatory }};
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
 
     {% endif %}
 

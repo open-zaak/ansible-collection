@@ -1,5 +1,8 @@
 ---
 
+- import_tasks: dhparam.yml
+  when: openzaak_generate_dhparam
+
 - name: Set the absolute path to the nginx template
   set_fact:
     openzaak_nginx_template: "{{ role_path }}/templates/openzaak.conf.j2"
