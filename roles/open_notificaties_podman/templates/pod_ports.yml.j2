@@ -1,0 +1,3 @@
+{% for replica in opennotificaties_replicas %}
+- "127.0.0.1:{{ replica.port }}:{{ replica.port }}"
+{% endfor %}

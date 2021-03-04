@@ -1,2 +1,8 @@
 ---
-# handlers file for open_notificaties_podman
+
+- name: restart opennotificaties
+  systemd:
+    name: pod-opennotificaties.service
+    state: restarted
+    scope: user
+  remote_user: "{{ opennotificaties_podman_user }}"

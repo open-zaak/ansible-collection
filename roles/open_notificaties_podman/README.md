@@ -1,38 +1,113 @@
-Role Name
-=========
+Open Notificaties (on a VM with Podman)
+=======================================
 
-A brief description of the role goes here.
+Deploy Open Notificaties using [Podman](https://podman.io/).
+
+Tested on RHEL 8.3.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- A PostgreSQL database
+- Podman installed and configured for rootless containers (see also
+  https://github.com/containers/podman/tree/v2.2.1-rhel/contrib/rootless-cni-infra)
+- `python3-devel` or equivalent package and dev tools (requires `gcc`)
+- the [`containers.podman`](https://galaxy.ansible.com/containers/podman) collection:
+  ```bash
+  $ ansible-galaxy collection install containers.podman
+  ```
+
+Note that this role conflicts with the `open_notificaties_docker` role!
+
+Note that when you're using SELinux, nginx must be allowed to connect to the network
+for the backend containers and be allowed access to the volumes in the podman user
+home directory.
+
+A quick and dirty way is to set nginx to permissive, and then configure your rules
+accordingly. Managing SELinux is out of our scope:
+
+```bash
+semanage permissive -a httpd_t
+```
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### SSL/NGINX
+
+See the [`open_notificaties_nginx` role documentation](../open_notificaties_nginx/README.md).
+
+### Environment variables
+
+You can specify extra environment variables to include, for example to enable the
+CMIS integration for the documents API.
+
+```yaml
+opennotificaties_extra_env:
+  - name: EMAIL_HOST
+    value: "mail.example.com"
+```
+
+Any entry in this list is added in order to the bottom of the `.env` file being
+templated out.
+
+Alternatively, you can override `opennotificaties_env_template` and specify a different `.env`
+template file alltogether.
+
+### Other
+
+See `./defaults/main.yml` for the remainder.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+- hosts: app-servers
+  roles:
+    - role: geerlingguy.postgresql
+      tags:
+        - db
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+    - role: geerlingguy.certbot
+
+    - role: app_database
+      vars:
+        app_db_provision_user: no
+        app_db_provision_database: no
+        app_db_become_user: postgres
+
+        app_db_host: ''
+        app_db_port: "{{ opennotificaties_db_port }}"
+        app_db_name: "{{ opennotificaties_db_name }}"
+        app_db_extensions:
+          - pg_trgm
+      tags:
+        - app_db
+
+    - role: open_notificaties_podman
+      vars:
+        opennotificaties_version: 'latest'  # see https://hub.docker.com/r/openzaak/open-notificaties/tags
+      tags:
+        - replicas
+
+    - role: nginxinc.nginx
+      vars:
+        nginx_http_template:
+          default:
+            # set by open_notificaties_podman role
+            template_file: "{{ opennotificaties_nginx_template }}"
+            conf_file_name: opennotificaties.conf
+            conf_file_location: /etc/nginx/conf.d/
+      tags:
+        - replicas
+```
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+EUPL-1.2
