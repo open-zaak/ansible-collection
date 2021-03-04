@@ -1,5 +1,11 @@
 ---
 
+openzaak_nginx_proto_value: '$scheme'
+
+openzaak_letsencrypt_enabled: "{[ openzaak_ssl and cerbot_certs is defined }}"
+# openzaak_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
+# openzaak_nginx_ssl_key: /path/to/ssl-key.pem
+
 # example: "frame-ancestors 'self' https://*.haarlem.nl;          report-uri https://haarlem.report-uri.com/r/d/csp/enforce"
 # see: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
 openzaak_csp: ''

@@ -3,10 +3,6 @@
 openzaak_domain: "{{ inventory_hostname }}"
 openzaak_subpath: /
 openzaak_ssl: yes
-openzaak_nginx_proto_value: '$scheme'
-openzaak_letsencrypt_enabled: "{[ openzaak_ssl and cerbot_certs is defined }}"
-# openzaak_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
-# openzaak_nginx_ssl_key: /path/to/ssl-key.pem
 
 openzaak_podman_user: podman
 
