@@ -101,7 +101,7 @@ server {
 
     location /private-media/ {
         internal;
-        alias {{ openzaak_volume_path | mandatory }};
+        alias {{ openzaak_volume_path | mandatory }}/;
     }
 
     error_page  404              /404.html;

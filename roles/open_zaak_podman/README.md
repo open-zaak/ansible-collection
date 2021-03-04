@@ -19,6 +19,17 @@ Requirements
 
 Note that this role conflicts with the `open_zaak_docker` role!
 
+Note that when you're using SELinux, nginx must be allowed to connect to the network
+for the backend containers and be allowed access to the volumes in the podman user
+home directory.
+
+A quick and dirty way is to set nginx to permissive, and then configure your rules
+accordingly. Managing SELinux is out of our scope:
+
+```bash
+semanage permissive -a httpd_t
+```
+
 Role Variables
 --------------
 

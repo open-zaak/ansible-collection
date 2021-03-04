@@ -23,7 +23,6 @@
 - name: Ensure nginx user exists
   user:
     name: "{{ openzaak_nginx_user }}"
-    groups: "{{ openzaak_podman_user }}"
     state: present
 
 # /home/podman/.local/share/containers/storage/volumes is by default only enter-able by
@@ -39,13 +38,21 @@
 
 - name: Ensure nginx user can enter container volumes
   user:
-    name: nginx
-    groups: enter-container-volumes
-    append: yes
+    name: "{{ openzaak_nginx_user }}"
+    groups:
+      - enter-container-volumes
+      - "{{ openzaak_nginx_user }}"
 
 - name: Ensure user group can enter container volumes directory
   file:
-    path: "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes/"
+    path: "{{ item }}"
     state: directory
     group: enter-container-volumes
     mode: g=x
+  with_items:
+    - "/home/{{ openzaak_podman_user }}"
+    - "/home/{{ openzaak_podman_user }}/.local"
+    - "/home/{{ openzaak_podman_user }}/.local/share"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes"
