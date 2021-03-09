@@ -25,9 +25,7 @@
     pod: openzaak
     image: "{{ openzaak_image }}"
     state: present  # do not start them - this is managed through systemd
-    volumes:
-      - /var/run/postgresql:/var/run/postgresql
-      - openzaak-private-media:/app/private-media
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
     # userns: keep-id -> does not work with pods, see
     # https://github.com/containers/podman/issues/6843#issuecomment-653016772
     env_file: "{{ openzaak_env_file }}"

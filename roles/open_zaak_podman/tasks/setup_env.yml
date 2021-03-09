@@ -56,3 +56,5 @@
     - "/home/{{ openzaak_podman_user }}/.local/share/containers"
     - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage"
     - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes"
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"

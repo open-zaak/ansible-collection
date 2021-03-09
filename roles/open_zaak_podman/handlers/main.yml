@@ -8,4 +8,5 @@
     name: pod-openzaak.service
     state: restarted
     scope: user
-  remote_user: "{{ openzaak_podman_user }}"
+  become: yes
+  become_user: "{{ openzaak_podman_user }}"

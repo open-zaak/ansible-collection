@@ -11,7 +11,8 @@
   become_user: "{{ opennotificaties_podman_user }}"
 
 - import_tasks: systemd.yml
-  remote_user: "{{ opennotificaties_podman_user }}"
+  become: yes
+  become_user: "{{ opennotificaties_podman_user }}"
 
 # load the nginx template
 - import_role:

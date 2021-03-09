@@ -14,6 +14,8 @@ openzaak_db_name: openzaak
 openzaak_db_username: openzaak
 openzaak_db_password: openzaak
 
+openzaak_db_bind_mount: /var/run/postgresql
+
 openzaak_cache_db: 0
 
 openzaak_sentry_dsn: null

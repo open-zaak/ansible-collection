@@ -5,4 +5,5 @@
     name: pod-opennotificaties.service
     state: restarted
     scope: user
-  remote_user: "{{ opennotificaties_podman_user }}"
+  become: yes
+  become_user: "{{ opennotificaties_podman_user }}"
