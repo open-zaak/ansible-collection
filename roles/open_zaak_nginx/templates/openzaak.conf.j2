@@ -56,16 +56,16 @@ server {
     ssl_session_cache shared:SSL:50m;
     ssl_session_tickets off;
 
-    ssl_ciphers '{{ openzaak_ssl_ciphers }}';
+    ssl_ciphers {{ openzaak_ssl_ciphers }};
     ssl_prefer_server_ciphers {{ openzaak_ssl_prefer_server_ciphers }};
 
-    {% if openzaak_generate_dhparam %}
+{% if openzaak_generate_dhparam %}
     ssl_dhparam /etc/ssl/certs/dhparam.pem;
-    {% endif %}
+{% endif %}
 
-    {% if openzaak_csp %}
+{% if openzaak_csp %}
     add_header Content-Security-Policy "{{ openzaak_csp }}";
-    {% endif %}
+{% endif %}
     add_header Feature-Policy "autoplay 'none'; camera 'none'" always;
     add_header Referrer-Policy "same-origin";
     add_header Strict-Transport-Security "{{ openzaak_ssl_hsts }}" always;

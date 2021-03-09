@@ -55,16 +55,16 @@ server {
     ssl_session_cache shared:SSL:50m;
     ssl_session_tickets off;
 
-    ssl_ciphers '{{ opennotificaties_ssl_ciphers }}';
+    ssl_ciphers {{ opennotificaties_ssl_ciphers }};
     ssl_prefer_server_ciphers {{ opennotificaties_ssl_prefer_server_ciphers }};
 
-    {% if opennotificaties_generate_dhparam %}
+{% if opennotificaties_generate_dhparam %}
     ssl_dhparam /etc/ssl/certs/dhparam.pem;
-    {% endif %}
+{% endif %}
 
-    {% if opennotificaties_csp %}
+{% if opennotificaties_csp %}
     add_header Content-Security-Policy "{{ opennotificaties_csp }}";
-    {% endif %}
+{% endif %}
     add_header Feature-Policy "autoplay 'none'; camera 'none'" always;
     add_header Referrer-Policy "same-origin";
     add_header Strict-Transport-Security "{{ opennotificaties_ssl_hsts }}" always;
