@@ -1,0 +1,5 @@
+{% if opennotificaties_db_bind_mount %}
+- {{ opennotificaties_db_bind_mount }}:/var/run/postgresql
+{% else %}
+[]
+{% endif %}

@@ -18,6 +18,8 @@ opennotificaties_db_name: opennotificaties
 opennotificaties_db_username: opennotificaties
 opennotificaties_db_password: opennotificaties
 
+opennotificaties_db_bind_mount: /var/run/postgresql
+
 opennotificaties_cache_db: 0
 
 # Error monitoring
