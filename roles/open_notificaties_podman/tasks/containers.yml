@@ -43,6 +43,7 @@
     # userns: keep-id -> does not work with pods, see
     # https://github.com/containers/podman/issues/6843#issuecomment-653016772
     env_file: "{{ opennotificaties_env_file }}"
+    recreate: "{{ opennotificaties_env_file_template.changed }}"
     env:
       UWSGI_PORT: "{{ item.port }}"
       DB_HOST: "{{ opennotificaties_db_host }}"
@@ -65,6 +66,7 @@
     # userns: keep-id -> does not work with pods, see
     # https://github.com/containers/podman/issues/6843#issuecomment-653016772
     env_file: "{{ opennotificaties_env_file }}"
+    recreate: "{{ opennotificaties_env_file_template.changed }}"
     env:
       DB_HOST: "{{ opennotificaties_db_host }}"
       DB_PORT: "{{ opennotificaties_db_port | string }}"
