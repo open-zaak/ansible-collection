@@ -8,7 +8,7 @@ upstream opennotificaties {
 server {
     server_tokens off;
     listen 80;
-    server_name {{ opennotificaties_domain }} default_server;
+    server_name {{ opennotificaties_nginx_server_names | join(' ') }} default_server;
     rewrite ^ https://{{ opennotificaties_domain }}$request_uri?;
 }
 {% endif %}
@@ -16,7 +16,7 @@ server {
 server {
     server_tokens off;
     listen {% if opennotificaties_ssl %}443 ssl http2{% else %}80{% endif %};
-    server_name {{ opennotificaties_domain }};
+    server_name {{ opennotificaties_nginx_server_names | join(' ') }};
 
     # Enable Gzip, from html5-boilerplate-server-configs
     gzip  on;

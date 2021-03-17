@@ -2,6 +2,9 @@
 
 opennotificaties_nginx_proto_value: '$scheme'
 
+opennotificaties_nginx_server_names:
+  - "{{ opennotificaties_domain }}"
+
 opennotificaties_letsencrypt_enabled: "{[ opennotificaties_ssl and cerbot_certs is defined }}"
 # opennotificaties_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
 # opennotificaties_nginx_ssl_key: /path/to/ssl-key.pem

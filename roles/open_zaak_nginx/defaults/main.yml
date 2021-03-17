@@ -2,6 +2,9 @@
 
 openzaak_nginx_proto_value: '$scheme'
 
+openzaak_nginx_server_names:
+  - "{{ openzaak_domain }}"
+
 openzaak_letsencrypt_enabled: "{[ openzaak_ssl and cerbot_certs is defined }}"
 # openzaak_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
 # openzaak_nginx_ssl_key: /path/to/ssl-key.pem
