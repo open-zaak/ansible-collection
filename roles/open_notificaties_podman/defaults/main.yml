@@ -6,6 +6,8 @@ opennotificaties_domain: "{{ inventory_hostname }}"
 opennotificaties_subpath: /
 opennotificaties_ssl: "{{ certbot_create_if_missing | default(yes) | bool }}"
 
+opennotificaties_podman_user: podman
+
 opennotificaties_secret_key: override-me
 
 # Database/cache
@@ -16,15 +18,18 @@ opennotificaties_db_name: opennotificaties
 opennotificaties_db_username: opennotificaties
 opennotificaties_db_password: opennotificaties
 
+opennotificaties_db_bind_mount: /var/run/postgresql
+
 opennotificaties_cache_db: 0
 
 # Error monitoring
 
 opennotificaties_sentry_dsn: null
 
-# Docker
+# Containers
 
-opennotificaties_env_file: /home/opennotificaties/.env
+opennotificaties_env_template: env.j2
+opennotificaties_env_file: "/home/{{ opennotificaties_podman_user }}/opennotificaties/.env"
 opennotificaties_extra_env: []
 
 opennotificaties_version: latest
@@ -42,8 +47,8 @@ opennotificaties_replicas:
 opennotificaties_rabbitmq_user: rabbit
 opennotificaties_rabbitmq_pass: rabbit
 
-opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq_user }}:{{ opennotificaties_rabbitmq_pass }}@message-broker:5672/%2F"
-opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq_user }}:{{ opennotificaties_rabbitmq_pass }}@message-broker:5672//"
+opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq_user }}:{{ opennotificaties_rabbitmq_pass }}@localhost:5672/%2F"
+opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq_user }}:{{ opennotificaties_rabbitmq_pass }}@localhost:5672//"
 opennotificaties_celery_result_backend: "{{ opennotificaties_celery_broker_url }}"
 
 opennotificaties_worker_replicas:

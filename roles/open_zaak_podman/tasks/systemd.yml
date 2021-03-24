@@ -1,0 +1,35 @@
+---
+
+# Generate and install the systemd units for the pod/containers
+# Reference: http://docs.podman.io/en/latest/markdown/podman-generate-systemd.1.html
+
+- name: Get user ID of podman user
+  getent:
+    database: passwd
+    key: "{{ openzaak_podman_user }}"
+
+- name: Ensure the systemd unit dir exists
+  file:
+    path: "/home/{{ openzaak_podman_user }}/.config/systemd/user"
+    state: directory
+
+- name: Template out systemd unit file
+  template:
+    src: pod.service.j2
+    dest: "/home/{{ openzaak_podman_user }}/.config/systemd/user/pod-openzaak.service"
+  vars:
+    user_id: "{{ getent_passwd[openzaak_podman_user][1] }}"
+  register: openzaak_systemd_unit
+
+- name: Enable linger
+  command: loginctl enable-linger
+  args:
+    creates: "/var/lib/systemd/linger/{{ openzaak_podman_user }}"
+
+- name: Enable service
+  systemd:
+    name: pod-openzaak.service
+    state: started
+    enabled: yes
+    scope: user
+    daemon_reload: "{{ openzaak_systemd_unit.changed }}"

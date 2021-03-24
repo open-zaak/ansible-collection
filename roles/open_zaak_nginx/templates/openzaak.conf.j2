@@ -1,22 +1,22 @@
-upstream opennotificaties {
-    {% for replica in opennotificaties_replicas %}
+upstream openzaak {
+    {% for replica in openzaak_replicas %}
         server 127.0.0.1:{{ replica.port }};
     {% endfor %}
 }
 
-{% if opennotificaties_ssl %}
+{% if openzaak_ssl %}
 server {
     server_tokens off;
     listen 80;
-    server_name {{ opennotificaties_domain }} default_server;
-    rewrite ^ https://{{ opennotificaties_domain }}$request_uri?;
+    server_name {{ openzaak_nginx_server_names | join (' ') }} default_server;
+    rewrite ^ https://{{ openzaak_domain }}$request_uri?;
 }
 {% endif %}
 
 server {
     server_tokens off;
-    listen {% if opennotificaties_ssl %}443 ssl http2{% else %}80{% endif %};
-    server_name {{ opennotificaties_domain }};
+    listen {% if openzaak_ssl %}443 ssl http2{% else %}80{% endif %};
+    server_name {{ openzaak_nginx_server_names | join (' ') }};
     client_max_body_size 4G;
 
     # Enable Gzip, from html5-boilerplate-server-configs
@@ -49,25 +49,37 @@ server {
     gzip_disable        "MSIE [1-6]\.";
     gzip_vary           on;
 
-    {% if opennotificaties_ssl %}
+    {% if openzaak_ssl %}
 
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Disable SSLv3 for security reasons
+    ssl_protocols {{ openzaak_ssl_protocols }}; # Disable SSLv3 for security reasons
     ssl_session_timeout 1d;
     ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
 
-    ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:!DSS';
+    ssl_ciphers {{ openzaak_ssl_ciphers }};
+    ssl_prefer_server_ciphers {{ openzaak_ssl_prefer_server_ciphers }};
 
-    ssl_prefer_server_ciphers on;
+{% if openzaak_generate_dhparam %}
     ssl_dhparam /etc/ssl/certs/dhparam.pem;
+{% endif %}
 
-    add_header Strict-Transport-Security max-age=15768000;
+{% if openzaak_csp %}
+    add_header Content-Security-Policy "{{ openzaak_csp }}";
+{% endif %}
+    add_header Feature-Policy "autoplay 'none'; camera 'none'" always;
+    add_header Referrer-Policy "same-origin";
+    add_header Strict-Transport-Security "{{ openzaak_ssl_hsts }}" always;
+    add_header X-Content-Type-Options "nosniff";
     add_header X-XSS-Protection "1; mode=block";
-    add_header X-Content-Type-Options nosniff;
 
     # Note: If using a certificate bundle ensure that the _first_ certificate
     # in the bundle corresponds with the private key.
-    ssl_certificate {{ opennotificaties_nginx_ssl_certificate | mandatory }};
-    ssl_certificate_key {{ opennotificaties_nginx_ssl_key | mandatory }};
+    ssl_certificate {{ openzaak_nginx_ssl_certificate | mandatory }};
+    ssl_certificate_key {{ openzaak_nginx_ssl_key | mandatory }};
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
 
     {% endif %}
 
@@ -75,7 +87,7 @@ server {
         proxy_pass_header Server;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto {{ opennotificaties_nginx_proto_value }};
+        proxy_set_header X-Forwarded-Proto {{ openzaak_nginx_proto_value }};
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Scheme $scheme;
         proxy_connect_timeout 300s;
@@ -84,7 +96,12 @@ server {
         proxy_set_header Host $http_host;
         proxy_redirect off;
         proxy_pass_request_headers on;
-        proxy_pass http://opennotificaties;
+        proxy_pass http://openzaak;
+    }
+
+    location /private-media/ {
+        internal;
+        alias {{ openzaak_volume_path | mandatory }}/;
     }
 
     error_page  404              /404.html;

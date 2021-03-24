@@ -1,5 +1,8 @@
 ---
 
+- import_tasks: dhparam.yml
+  when: openzaak_generate_dhparam
+
 - name: Determine the ssl_cert path
   set_fact:
     openzaak_nginx_ssl_certificate: "/etc/letsencrypt/live/{{ openzaak_domain }}/fullchain.pem"

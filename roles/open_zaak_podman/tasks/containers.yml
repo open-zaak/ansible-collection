@@ -1,0 +1,58 @@
+---
+
+# All containers are running in a single podman pod, which eliminates the need for a
+# separate network.
+
+- name: Create pod for containers
+  containers.podman.podman_pod:
+    name: openzaak
+    state: created
+    ports: "{{ lookup('template', 'pod_ports.yml.j2') | from_yaml }}"
+  register: openzaak_pod
+
+- name: Create the cache service
+  containers.podman.podman_container:
+    name: openzaak-cache
+    pod: openzaak
+    image: docker.io/library/redis:5
+    state: present  # do not start them - this is managed through systemd
+  notify:
+    - restart openzaak
+
+- name: Create the Open Zaak backend service
+  containers.podman.podman_container:
+    name: "{{ item.name }}"
+    pod: openzaak
+    image: "{{ openzaak_image }}"
+    state: present  # do not start them - this is managed through systemd
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
+    # userns: keep-id -> does not work with pods, see
+    # https://github.com/containers/podman/issues/6843#issuecomment-653016772
+    env_file: "{{ openzaak_env_file }}"
+    recreate: "{{ openzaak_env_file_template.changed }}"
+    env:
+      UWSGI_PORT: "{{ item.port }}"
+      DB_HOST: "{{ openzaak_db_host }}"
+      DB_PORT: "{{ openzaak_db_port | string }}"
+      SECRET_KEY: "{{ openzaak_secret_key }}"
+      SUBPATH: "{{ openzaak_subpath }}"
+  with_items: "{{ openzaak_replicas }}"
+  notify:
+    - restart openzaak
+
+- name: Get pod state
+  containers.podman.podman_pod_info:
+    name: openzaak
+  register: openzaak_pods
+
+# State is managed via systemd, which needs the PIDFILE, so we stop the pod (which
+# stops the containers). The tasks in systemd.yaml ensure that the service is running.
+# Note that there is a bug where stopped pods are destroyed, thereby breaking the
+# infra container ID reference, see:
+# https://github.com/containers/ansible-podman-collections/issues/215
+- name: Ensure the pod is stopped
+  command: podman pod stop openzaak
+  when: openzaak_pods.pods[0].State == "Running"
+  # containers.podman.podman_pod:
+  #   name: openzaak
+  #   state: stopped

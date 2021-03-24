@@ -1,13 +1,34 @@
-Open Notificaties (on a VM with Docker)
+Open Notificaties (on a VM with Podman)
 =======================================
 
-Deploy Open Notificaties using Docker.
+Deploy Open Notificaties using [Podman](https://podman.io/).
+
+Tested on RHEL 8.3.
 
 Requirements
 ------------
 
 - A PostgreSQL database
-- Docker runtime on the target machine
+- Podman installed and configured for rootless containers (see also
+  https://github.com/containers/podman/tree/v2.2.1-rhel/contrib/rootless-cni-infra)
+- `python3-devel` or equivalent package and dev tools (requires `gcc`)
+- the [`containers.podman`](https://galaxy.ansible.com/containers/podman) collection:
+  ```bash
+  $ ansible-galaxy collection install containers.podman
+  ```
+
+Note that this role conflicts with the `open_notificaties_docker` role!
+
+Note that when you're using SELinux, nginx must be allowed to connect to the network
+for the backend containers and be allowed access to the volumes in the podman user
+home directory.
+
+A quick and dirty way is to set nginx to permissive, and then configure your rules
+accordingly. Managing SELinux is out of our scope:
+
+```bash
+semanage permissive -a httpd_t
+```
 
 Role Variables
 --------------
@@ -52,8 +73,6 @@ Example Playbook
       tags:
         - db
 
-    - role: geerlingguy.docker
-
     - role: geerlingguy.certbot
 
     - role: app_database
@@ -70,10 +89,9 @@ Example Playbook
       tags:
         - app_db
 
-    - role: open_notificaties_docker
+    - role: open_notificaties_podman
       vars:
-        opennotificaties_version: '1.1.0'  # see https://hub.docker.com/r/openzaak/open-notificaties/tags
-        opennotificaties_cache_db: 1
+        opennotificaties_version: 'latest'  # see https://hub.docker.com/r/openzaak/open-notificaties/tags
       tags:
         - replicas
 
@@ -81,7 +99,7 @@ Example Playbook
       vars:
         nginx_http_template:
           default:
-            # set by open_notificaties_docker role
+            # set by open_notificaties_podman role
             template_file: "{{ opennotificaties_nginx_template }}"
             conf_file_name: opennotificaties.conf
             conf_file_location: /etc/nginx/conf.d/

@@ -1,0 +1,9 @@
+---
+
+- name: restart opennotificaties
+  systemd:
+    name: pod-opennotificaties.service
+    state: restarted
+    scope: user
+  become: yes
+  become_user: "{{ opennotificaties_podman_user }}"

@@ -1,0 +1,17 @@
+---
+
+# Set up the environment files on the host machine
+
+- name: Create application configuration directory
+  file:
+    path: /home/{{ opennotificaties_podman_user }}/opennotificaties/
+    state: directory
+
+- name: Setup the environment variables
+  template:
+    src: "{{ opennotificaties_env_template }}"
+    dest: /home/{{ opennotificaties_podman_user }}/opennotificaties/.env
+    mode: u=rwx,g-rwx,o-rwx
+  register: opennotificaties_env_file_template
+  notify:
+    - restart opennotificaties

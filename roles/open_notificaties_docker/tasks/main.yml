@@ -6,4 +6,6 @@
 - import_tasks: network.yml
 - import_tasks: containers.yml
 
-- import_tasks: set_facts.yml
+# load the nginx template
+- import_role:
+    name: openzaak.deploy.open_notificaties_nginx

@@ -1,0 +1,99 @@
+---
+
+# All containers are running in a single podman pod, which eliminates the need for a
+# separate network.
+
+- name: Create pod for containers
+  containers.podman.podman_pod:
+    name: opennotificaties
+    state: created
+    ports: "{{ lookup('template', 'pod_ports.yml.j2') | from_yaml }}"
+  register: opennotificaties_pod
+
+# Supporting containers
+
+- name: Create the cache service
+  containers.podman.podman_container:
+    name: opennotificaties-cache
+    pod: opennotificaties
+    image: docker.io/library/redis:5
+    state: present  # do not start them - this is managed through systemd
+  notify:
+    - restart opennotificaties
+
+- name: Run the RabbitMQ message broker
+  containers.podman.podman_container:
+    name: opennotificaties-message-broker
+    pod: opennotificaties
+    image: docker.io/library/rabbitmq:3.7
+    state: present  # do not start them - this is managed through systemd
+    env:
+      RABBITMQ_DEFAULT_USER: "{{ opennotificaties_rabbitmq_user }}"
+      RABBITMQ_DEFAULT_PASS: "{{ opennotificaties_rabbitmq_pass }}"
+
+# Application containers
+
+- name: Create the Open Notificaties backend service
+  containers.podman.podman_container:
+    name: "{{ item.name }}"
+    pod: opennotificaties
+    image: "{{ opennotificaties_image }}"
+    state: present  # do not start them - this is managed through systemd
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
+    # userns: keep-id -> does not work with pods, see
+    # https://github.com/containers/podman/issues/6843#issuecomment-653016772
+    env_file: "{{ opennotificaties_env_file }}"
+    recreate: "{{ opennotificaties_env_file_template.changed }}"
+    env:
+      UWSGI_PORT: "{{ item.port }}"
+      DB_HOST: "{{ opennotificaties_db_host }}"
+      DB_PORT: "{{ opennotificaties_db_port | string }}"
+      RABBITMQ_HOST: localhost
+      RABBITMQ_PORT: '5672'
+      SECRET_KEY: "{{ opennotificaties_secret_key }}"
+      SUBPATH: "{{ opennotificaties_subpath }}"
+  with_items: "{{ opennotificaties_replicas }}"
+  notify:
+    - restart opennotificaties
+
+- name: Run the Open Notificaties background workers
+  containers.podman.podman_container:
+    name: "{{ item.name }}"
+    pod: opennotificaties
+    image: "{{ opennotificaties_image }}"
+    state: present  # do not start them - this is managed through systemd
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
+    # userns: keep-id -> does not work with pods, see
+    # https://github.com/containers/podman/issues/6843#issuecomment-653016772
+    env_file: "{{ opennotificaties_env_file }}"
+    recreate: "{{ opennotificaties_env_file_template.changed }}"
+    env:
+      DB_HOST: "{{ opennotificaties_db_host }}"
+      DB_PORT: "{{ opennotificaties_db_port | string }}"
+      RABBITMQ_HOST: localhost
+      RABBITMQ_PORT: '5672'
+      SECRET_KEY: "{{ opennotificaties_secret_key }}"
+      SUBPATH: "{{ opennotificaties_subpath }}"
+    command: ["/celery_worker.sh"]
+  with_items: "{{ opennotificaties_worker_replicas }}"
+  notify:
+    - restart opennotificaties
+
+# Prepare for systemd integration
+
+- name: Get pod state
+  containers.podman.podman_pod_info:
+    name: opennotificaties
+  register: opennotificaties_pods
+
+# State is managed via systemd, which needs the PIDFILE, so we stop the pod (which
+# stops the containers). The tasks in systemd.yaml ensure that the service is running.
+# Note that there is a bug where stopped pods are destroyed, thereby breaking the
+# infra container ID reference, see:
+# https://github.com/containers/ansible-podman-collections/issues/215
+- name: Ensure the pod is stopped
+  command: podman pod stop opennotificaties
+  when: opennotificaties_pods.pods[0].State == "Running"
+  # containers.podman.podman_pod:
+  #   name: opennotificaties
+  #   state: stopped
