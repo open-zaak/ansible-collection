@@ -42,7 +42,7 @@ openzaak_resource_limits:
   memory: "1Gi"
   cpu: "1000m"
 
-openzaak_nginx_version: "1.17"
+openzaak_nginx_version: "1.19"
 openzaak_nginx_replicas: 2
 openzaak_nginx_resource_limits:
   cpu: "500m"
