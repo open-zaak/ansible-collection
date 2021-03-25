@@ -10,7 +10,8 @@ openzaak_domain: open-zaak.gemeente.nl
 openzaak_extra_hosts: []
 openzaak_extra_allowed_hosts:
   - openzaak  # service name that nginx proxies to
-openzaak_use_traefik_crd: yes
+openzaak_use_traefik_crd: false
+openzaak_use_x_forwarded_host: false
 
 # Django config parameters
 openzaak_secret_key: override-me

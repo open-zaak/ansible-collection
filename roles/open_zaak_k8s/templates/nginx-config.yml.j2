@@ -13,7 +13,8 @@ data:
     proxy_connect_timeout 300s;
     proxy_read_timeout 300s;
 
-    # proxy_set_header Host $http_host;
+{% if not openzaak_use_x_forwarded_host %}    proxy_set_header Host $http_host;{% endif %}
+
     proxy_redirect off;
     proxy_pass_request_headers on;
     proxy_pass http://openzaak:8000;
