@@ -78,7 +78,7 @@ spec:
           - name: DJANGO_SETTINGS_MODULE
             value: openzaak.conf.docker
           - name: ALLOWED_HOSTS
-            value: "localhost,openzaak-nginx.{{ openzaak_namespace }},{{ openzaak_domain }}{% if openzaak_extra_hosts %},{{ openzaak_extra_hosts | join(',') }}{% endif %}"
+            value: "localhost,{{ openzaak_domain }}{% if openzaak_extra_allowed_hosts %},{{ openzaak_extra_allowed_hosts | join(',') }}{% endif %}{% if openzaak_extra_hosts %},{{ openzaak_extra_hosts | join(',') }}{% endif %}"
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:

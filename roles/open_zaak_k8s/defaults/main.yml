@@ -8,6 +8,8 @@ openzaak_instance: prod
 # Ingress/routing details
 openzaak_domain: open-zaak.gemeente.nl
 openzaak_extra_hosts: []
+openzaak_extra_allowed_hosts:
+  - openzaak  # service name that nginx proxies to
 openzaak_use_traefik_crd: yes
 
 # Django config parameters
