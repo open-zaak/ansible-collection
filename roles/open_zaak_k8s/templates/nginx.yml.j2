@@ -31,12 +31,16 @@ spec:
         config-version: "{{ config_version }}"
     spec:
       volumes:
+
+{% if openzaak_provision_storage %}
         - name: private-storage
           persistentVolumeClaim:
-            claimName: openzaak-test
+            claimName: {{ openzaak_storage_name }}
+{% endif %}
+
         - name: nginx-config
           configMap:
-            name: nginx
+            name: openzaak-nginx
       containers:
       - name: nginx
         image: nginx:{{ openzaak_nginx_version }}
@@ -54,19 +58,18 @@ spec:
             httpHeaders:
               - name: Host
                 value: localhost
-          initialDelaySeconds: 5
-          periodSeconds: 10
 
         livenessProbe:
           httpGet:
             port: 80
             path: /_health/
-          initialDelaySeconds: 15
-          periodSeconds: 20
 
         volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d/
+
+{% if openzaak_provision_storage %}
           - name: private-storage
             mountPath: /app/private-media
             subPath: openzaak/{{ openzaak_instance }}/private-media
-          - name: nginx-config
-            mountPath: /etc/nginx/conf.d/
+{% endif %}

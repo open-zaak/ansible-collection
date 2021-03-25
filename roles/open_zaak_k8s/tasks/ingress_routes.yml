@@ -19,7 +19,7 @@
         - match: Host(`{{ openzaak_domain }}`)
           kind: Rule
           services:
-          - name: nginx
+          - name: openzaak-nginx
             port: 80
           middlewares:
             - name: https-redirect
@@ -42,7 +42,7 @@
         - match: Host(`{{ openzaak_domain }}`)
           kind: Rule
           services:
-          - name: nginx
+          - name: openzaak-nginx
             port: 80
           middlewares:
             - name: https-hsts

@@ -5,7 +5,7 @@
 - name: Set up nGinx vhost config
   k8s:
     state: present
-    name: nginx
+    name: openzaak-nginx
     namespace: "{{ openzaak_namespace }}"
     definition: "{{ lookup('template', 'nginx-config.yml.j2') | from_yaml }}"
     validate:

@@ -2,6 +2,7 @@
 
 # Kubernetes namespace to run in
 openzaak_namespace: open-zaak
+openzaak_manage_namespace: true
 openzaak_instance: prod
 
 # Ingress/routing details
@@ -31,8 +32,11 @@ openzaak_version: latest
 openzaak_image: openzaak/open-zaak:{{ openzaak_version }}
 openzaak_replicas: 3
 
+# required if you're using the documents API (without CMIS adapter)
+openzaak_provision_storage: true
 openzaak_storage: 10Gi
 openzaak_storage_name: openzaak-files
+openzaak_storage_class_name: ''
 
 openzaak_resource_limits:
   memory: "1Gi"

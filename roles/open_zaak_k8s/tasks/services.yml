@@ -5,7 +5,7 @@
 - name: Set up Redis cache service
   k8s:
     state: present
-    name: cache
+    name: openzaak-cache
     namespace: "{{ openzaak_namespace }}"
     definition: "{{ lookup('template', 'redis-svc.yml.j2') | from_yaml }}"
     validate:
@@ -26,7 +26,7 @@
 - name: Set up nGinx service
   k8s:
     state: present
-    name: nginx
+    name: openzaak-nginx
     namespace: "{{ openzaak_namespace }}"
     definition: "{{ lookup('template', 'nginx-svc.yml.j2') | from_yaml }}"
     validate:
