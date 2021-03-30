@@ -51,8 +51,8 @@ Example playbooks can be found in the [Open Zaak][Open Zaak] and
 [Open Notificaties][Open Notificaties] repositories.
 
 [Ansible]: https://docs.ansible.com/
-[Open Zaak]: https://github.com/open-zaak/open-zaak/tree/master/deployment
-[Open Notificaties]: https://github.com/open-zaak/open-notificaties/tree/master/deployment
+[Open Zaak]: https://github.com/open-zaak/open-zaak/tree/main/deployment
+[Open Notificaties]: https://github.com/open-zaak/open-notificaties/tree/main/deployment
 
 ## OS-specific notes
 
