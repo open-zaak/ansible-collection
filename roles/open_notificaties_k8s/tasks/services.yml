@@ -5,7 +5,7 @@
 - name: Set up Redis cache service
   k8s:
     state: present
-    name: cache
+    name: opennotificaties-cache
     namespace: "{{ opennotificaties_namespace }}"
     definition: "{{ lookup('template', 'redis-svc.yml.j2') | from_yaml }}"
     validate:
@@ -15,7 +15,7 @@
 - name: Set up RabbitMQ broker service
   k8s:
     state: present
-    name: rabbitmq
+    name: opennotificaties-rabbitmq
     namespace: "{{ opennotificaties_namespace }}"
     definition: "{{ lookup('template', 'rabbitmq-svc.yml.j2') | from_yaml }}"
     validate:

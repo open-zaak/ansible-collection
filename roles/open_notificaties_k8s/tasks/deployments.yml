@@ -7,7 +7,7 @@
 - name: Set up Redis cache
   k8s:
     state: present
-    name: cache
+    name: opennotificaties-cache
     namespace: "{{ opennotificaties_namespace }}"
     definition: "{{ lookup('template', 'redis.yml.j2') | from_yaml }}"
     validate:
@@ -17,7 +17,7 @@
 - name: Set up RabbitMQ
   k8s:
     state: present
-    name: rabbitmq
+    name: opennotificaties-rabbitmq
     namespace: "{{ opennotificaties_namespace }}"
     definition: "{{ lookup('template', 'rabbitmq.yml.j2') | from_yaml }}"
     validate:
@@ -33,6 +33,8 @@
     validate:
       fail_on_error: yes
       strict: yes
+  vars:
+    secrets_version: "{{ opennotificaties_secrets.result.metadata.resourceVersion }}"
 
 - name: Set up Open Notificaties Celery
   k8s:
@@ -43,3 +45,5 @@
     validate:
       fail_on_error: yes
       strict: yes
+  vars:
+    secrets_version: "{{ opennotificaties_secrets.result.metadata.resourceVersion }}"

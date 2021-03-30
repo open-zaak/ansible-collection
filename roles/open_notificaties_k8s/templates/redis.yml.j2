@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: cache
-        image: redis:5.0
+        image: redis:6.0
 
         resources:
           requests:
@@ -43,11 +43,7 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 6379
-          initialDelaySeconds: 5
-          periodSeconds: 10
 
         livenessProbe:
           tcpSocket:
             port: 6379
-          initialDelaySeconds: 15
-          periodSeconds: 20
