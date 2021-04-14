@@ -46,6 +46,8 @@ opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }
 opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@opennotificaties-rabbitmq:5672//"
 opennotificaties_celery_result_backend: "{{ opennotificaties_celery_broker_url }}"
 
+# https://www.rabbitmq.com/production-checklist.html#resource-limits-ram
+# rabbitmq needs AT LEAST 256MB
 opennotificaties_rabbitmq_resource_limits:
-  memory: "200Mi"
+  memory: "500Mi"
   cpu: "250m"
