@@ -44,9 +44,7 @@
       - name: opennotificaties
     purge_networks: yes
     networks_cli_compatible: yes
-    volumes:
-      - /var/run/postgresql:/var/run/postgresql
-      - "{{ opennotificaties_env_file }}:/app/.env"
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
     ports:
       - "127.0.0.1:{{ item.port }}:8000"
     env:
@@ -71,9 +69,7 @@
       - name: opennotificaties
     purge_networks: yes
     networks_cli_compatible: yes
-    volumes:
-      - /var/run/postgresql:/var/run/postgresql
-      - "{{ opennotificaties_env_file }}:/app/.env"
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
     env:
       DB_HOST: "{{ opennotificaties_db_host }}"
       DB_PORT: "{{ opennotificaties_db_port | string }}"

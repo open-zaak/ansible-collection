@@ -12,6 +12,8 @@ openzaak_db_name: openzaak
 openzaak_db_username: openzaak
 openzaak_db_password: openzaak
 
+openzaak_db_bind_mount: /var/run/postgresql
+
 openzaak_cache_db: 0
 
 openzaak_sentry_dsn: null
@@ -19,6 +21,10 @@ openzaak_sentry_dsn: null
 openzaak_env_template: env.j2
 openzaak_env_file: /home/openzaak/.env
 openzaak_extra_env: []
+# example:
+# openzaak_extra_volumes:
+#   - /etc/ssl/certs:/certs:ro
+openzaak_extra_volumes: []
 
 openzaak_version: latest
 openzaak_image: docker.io/openzaak/open-zaak:{{ openzaak_version }}

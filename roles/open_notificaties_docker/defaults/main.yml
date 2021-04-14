@@ -16,6 +16,8 @@ opennotificaties_db_name: opennotificaties
 opennotificaties_db_username: opennotificaties
 opennotificaties_db_password: opennotificaties
 
+opennotificaties_db_bind_mount: /var/run/postgresql
+
 opennotificaties_cache_db: 0
 
 # Error monitoring
@@ -26,6 +28,10 @@ opennotificaties_sentry_dsn: null
 
 opennotificaties_env_file: /home/opennotificaties/.env
 opennotificaties_extra_env: []
+# example:
+# opennotificaties_extra_volumes:
+#   - /etc/ssl/certs:/certs:ro
+opennotificaties_extra_volumes: []
 
 opennotificaties_version: latest
 opennotificaties_image: docker.io/openzaak/open-notificaties:{{ opennotificaties_version }}

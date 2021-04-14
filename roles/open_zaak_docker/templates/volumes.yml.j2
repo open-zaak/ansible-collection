@@ -1,4 +1,5 @@
 - openzaak-private-media:/app/private-media
+- "{{ openzaak_env_file }}:/app/.env"
 {% if openzaak_db_bind_mount %}
 - {{ openzaak_db_bind_mount }}:/var/run/postgresql
 {% endif %}
