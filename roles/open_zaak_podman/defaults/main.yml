@@ -23,6 +23,10 @@ openzaak_sentry_dsn: null
 openzaak_env_template: env.j2
 openzaak_env_file: "/home/{{ openzaak_podman_user }}/openzaak/.env"
 openzaak_extra_env: []
+# example:
+# openzaak_extra_volumes:
+#   - /etc/ssl/certs:/certs:ro
+openzaak_extra_volumes: []
 
 openzaak_version: latest
 openzaak_image: docker.io/openzaak/open-zaak:{{ openzaak_version }}

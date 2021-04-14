@@ -31,6 +31,10 @@ opennotificaties_sentry_dsn: null
 opennotificaties_env_template: env.j2
 opennotificaties_env_file: "/home/{{ opennotificaties_podman_user }}/opennotificaties/.env"
 opennotificaties_extra_env: []
+# example:
+# opennotificaties_extra_volumes:
+#   - /etc/ssl/certs:/certs:ro
+opennotificaties_extra_volumes: []
 
 opennotificaties_version: latest
 opennotificaties_image: docker.io/openzaak/open-notificaties:{{ opennotificaties_version }}
