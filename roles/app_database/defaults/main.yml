@@ -18,6 +18,7 @@ app_db_host: localhost
 app_db_port: 5432
 app_db_login_user: postgres
 app_db_login_password: ""
+app_db_login_db: "{{ app_db_login_user }}"
 
 app_db_provision_user: yes
 app_db_provision_database: yes
