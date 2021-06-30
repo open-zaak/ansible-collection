@@ -10,6 +10,7 @@
     password: "{{ app_db_password | mandatory }}"
 
     login_host: "{{ app_db_host }}"
+    login_db: "{{ app_db_login_db }}"
     port: "{{ app_db_port }}"
     login_user: "{{ app_db_login_user }}"
     login_password: "{{ app_db_login_password }}"
@@ -23,6 +24,7 @@
       - "{{ app_db_login_user }}"
 
     login_host: "{{ app_db_host }}"
+    login_db: "{{ app_db_login_db }}"
     port: "{{ app_db_port }}"
     login_user: "{{ app_db_login_user }}"
     login_password: "{{ app_db_login_password }}"
@@ -35,6 +37,7 @@
     password: "{{ item.password | mandatory }}"
 
     login_host: "{{ app_db_host }}"
+    login_db: "{{ app_db_login_db }}"
     port: "{{ app_db_port }}"
     login_user: "{{ app_db_login_user }}"
     login_password: "{{ app_db_login_password }}"
