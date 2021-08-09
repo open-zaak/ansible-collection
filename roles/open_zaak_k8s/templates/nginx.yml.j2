@@ -43,7 +43,7 @@ spec:
             name: openzaak-nginx
       containers:
       - name: nginx
-        image: nginx:{{ openzaak_nginx_version }}
+        image: nginxinc/nginx-unprivileged:{{ openzaak_nginx_version }}
 
         resources:
           requests:
@@ -53,12 +53,12 @@ spec:
 
         readinessProbe:
           httpGet:
-            port: 80
+            port: 8080
             path: /
 
         livenessProbe:
           httpGet:
-            port: 80
+            port: 8080
             path: /_health/
 
         volumeMounts:
@@ -70,3 +70,6 @@ spec:
             mountPath: /app/private-media
             subPath: openzaak/{{ openzaak_instance }}/private-media
 {% endif %}
+      serviceAccountName: "{{ openzaak_service_account| default('default') }}"
+      securityContext:
+        fsGroup:  {{ openzaak_pod_security_context.fsGroup }}

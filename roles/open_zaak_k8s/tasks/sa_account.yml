@@ -1,0 +1,87 @@
+---
+
+- name: Create service account (sa)
+  k8s:
+    state: present
+    name: "{{ openzaak_service_account }}"
+    namespace: "{{ openzaak_namespace }}"
+    definition:
+      kind: ServiceAccount
+      apiVersion: v1
+      metadata:
+        name: "{{ openzaak_service_account }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+
+- name: Create SecurityContextConstraints(scc)
+  k8s:
+    state: present
+    name: "scc-{{ openzaak_service_account }}"
+    namespace: "{{ openzaak_namespace }}"
+    definition:
+      kind: SecurityContextConstraints
+      apiVersion: security.openshift.io/v1
+      metadata:
+        name: "scc-{{ openzaak_service_account }}"
+      allowPrivilegedContainer: false
+      runAsUser:
+        type: MustRunAsRange
+        uidRangeMin: 1000
+        uidRangeMax: 2000
+      seLinuxContext:
+        type: RunAsAny
+      fsGroup:
+        type: MustRunAs
+        ranges:
+        - min: 1000
+          max: 2000
+      supplementalGroups:
+        type: MustRunAs
+        ranges:
+        - min: 1000
+          max: 2000
+    validate:
+      fail_on_error: yes
+      strict: yes
+
+- name: Create RBAC role
+  k8s:
+    state: present
+    name: "use-scc-{{ openzaak_service_account }}"
+    namespace: "{{ openzaak_namespace }}"
+    definition:
+      kind: Role
+      apiVersion: rbac.authorization.k8s.io/v1
+      metadata:
+        name: "use-scc-{{ openzaak_service_account }}"
+      rules:
+        - apiGroups: ["security.openshift.io"]
+          resources: ["securitycontextconstraints"]
+          resourceNames: ["scc-{{ openzaak_service_account }}"]
+          verbs: ["use"]
+    validate:
+      fail_on_error: yes
+      strict: yes
+
+- name: Create RBAC rolebinding
+  k8s:
+    state: present
+    name: "use-scc-{{ openzaak_service_account }}"
+    namespace: "{{ openzaak_namespace }}"
+    definition:
+      kind: RoleBinding
+      apiVersion: rbac.authorization.k8s.io/v1
+      metadata:
+        name: "use-scc-{{ openzaak_service_account }}"
+      subjects:
+        - kind: ServiceAccount
+          name: "{{ openzaak_service_account }}"
+      roleRef:
+        kind: Role
+        name: "use-scc-{{ openzaak_service_account }}"
+        apiGroup: rbac.authorization.k8s.io
+    validate:
+      fail_on_error: yes
+      strict: yes
+

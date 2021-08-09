@@ -1,4 +1,9 @@
 ---
+# Pod security
+openzaak_service_account: ''
+openzaak_create_service_account: false
+openzaak_pod_security_context:
+  fsGroup: 1000
 
 # Kubernetes namespace to run in
 openzaak_namespace: open-zaak
@@ -45,7 +50,7 @@ openzaak_resource_limits:
   memory: "1Gi"
   cpu: "1000m"
 
-openzaak_nginx_version: "1.19"
+openzaak_nginx_version: "stable"
 openzaak_nginx_replicas: 2
 openzaak_nginx_resource_limits:
   cpu: "500m"

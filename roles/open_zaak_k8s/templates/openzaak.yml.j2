@@ -122,3 +122,6 @@ spec:
           - name: "{{ envvar.name }}"
             value: "{{ envvar.value }}"
 {% endfor %}
+      serviceAccountName: "{{ openzaak_service_account| default('default') }}"
+      securityContext:
+        fsGroup:  {{ openzaak_pod_security_context.fsGroup }}

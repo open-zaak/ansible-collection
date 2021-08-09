@@ -20,7 +20,7 @@
           kind: Rule
           services:
           - name: openzaak-nginx
-            port: 80
+            port: 8080
           middlewares:
             - name: https-redirect
               namespace: default
@@ -43,7 +43,7 @@
           kind: Rule
           services:
           - name: openzaak-nginx
-            port: 80
+            port: 8080
           middlewares:
             - name: https-hsts
               namespace: default
