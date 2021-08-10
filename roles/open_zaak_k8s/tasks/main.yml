@@ -7,6 +7,9 @@
 - import_tasks: storage.yml
 - import_tasks: config.yml
 
+- import_tasks: tls.yml
+  when: openzaak_use_tls
+
 - import_tasks: deployments.yml
 
 - import_tasks: ingress_routes.yml

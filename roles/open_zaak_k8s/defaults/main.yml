@@ -1,4 +1,10 @@
 ---
+# Use TLS
+openzaak_use_tls: false
+openzaak_tls_secrets:
+  crt: ''                 # cert file location on localhost, example: "~/tls/tls.crt"
+  key: ''                 # privatekey file location on localhost, example: "~/tls/tls.key"
+
 # Pod security
 openzaak_service_account: ''
 openzaak_create_service_account: false
