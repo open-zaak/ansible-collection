@@ -61,3 +61,6 @@ spec:
           periodSeconds: 30
 
         env: {{ lookup('template', 'env.yml.j2') | from_yaml }}
+
+      serviceAccountName: "{{ opennotificaties_service_account| default('default') }}"
+      securityContext: {{ opennotificaties_pod_security_context }}
