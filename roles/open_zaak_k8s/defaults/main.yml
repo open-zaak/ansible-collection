@@ -1,15 +1,4 @@
 ---
-# Use TLS
-openzaak_use_tls: false
-openzaak_tls_secrets:
-  crt: ''                 # cert file location on localhost, example: "~/tls/tls.crt"
-  key: ''                 # privatekey file location on localhost, example: "~/tls/tls.key"
-
-# Pod security
-openzaak_service_account: ''
-openzaak_create_service_account: false
-openzaak_pod_security_context:
-  fsGroup: 1000
 
 # Kubernetes namespace to run in
 openzaak_namespace: open-zaak
@@ -21,8 +10,14 @@ openzaak_domain: open-zaak.gemeente.nl
 openzaak_extra_hosts: []
 openzaak_extra_allowed_hosts:
   - openzaak  # service name that nginx proxies to
-openzaak_use_traefik_crd: false
 openzaak_use_x_forwarded_host: false
+openzaak_use_traefik_crd: false
+
+# uncomment to provide custom ingress template, defaults to 'ingress.yml.j2'
+# openzaak_ingress_tpl:
+
+# provide ingress_annotations
+openzaak_ingress_annotations: ''
 
 # Django config parameters
 openzaak_secret_key: override-me
@@ -61,3 +56,18 @@ openzaak_nginx_replicas: 2
 openzaak_nginx_resource_limits:
   cpu: "500m"
   memory: "500Mi"
+
+# Use TLS
+openzaak_use_tls: false
+# Provide tls secrets when openzaak_use_tls is set to true
+openzaak_tls_secrets:
+  crt: ''
+  key: ''
+
+# Pod security
+openzaak_service_account: ''
+openzaak_create_service_account: false
+openzaak_pod_security_context:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000

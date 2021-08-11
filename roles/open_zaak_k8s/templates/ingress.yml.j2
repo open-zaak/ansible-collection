@@ -1,15 +1,16 @@
----
-
+apiVersion: networking.k8s.io/v1
 kind: Ingress
-apiVersion: networking.k8s.io/v1beta1
 metadata:
+  name: openzaak
+  namespace: cg-test
   labels:
     app.kubernetes.io/name: openzaak
     app.kubernetes.io/version: "{{ openzaak_version }}"
     app.kubernetes.io/component: backend
     app.kubernetes.io/managed-by: Ansible
-  annotations:
-    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+  annotations: {{ openzaak_ingress_annotations }}
+    
+     
 spec:
 {% if openzaak_use_tls %}
   tls:
@@ -18,11 +19,14 @@ spec:
       secretName: "openzaak-tls-secrets"
 {% endif %}
   rules:
-  - host: "{{ openzaak_domain }}"
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: openzaak-nginx
-          servicePort: 8080
+    - host: "{{ openzaak_domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openzaak-nginx
+                port:
+                  number: 8080
 

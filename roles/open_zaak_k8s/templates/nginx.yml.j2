@@ -71,5 +71,4 @@ spec:
             subPath: openzaak/{{ openzaak_instance }}/private-media
 {% endif %}
       serviceAccountName: "{{ openzaak_service_account| default('default') }}"
-      securityContext:
-        fsGroup:  {{ openzaak_pod_security_context.fsGroup }}
+      securityContext: {{ openzaak_pod_security_context }}
