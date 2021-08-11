@@ -1,8 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: openzaak
-  namespace: cg-test
   labels:
     app.kubernetes.io/name: openzaak
     app.kubernetes.io/version: "{{ openzaak_version }}"
@@ -10,7 +8,6 @@ metadata:
     app.kubernetes.io/managed-by: Ansible
   annotations: {{ openzaak_ingress_annotations }}
     
-     
 spec:
 {% if openzaak_use_tls %}
   tls:
