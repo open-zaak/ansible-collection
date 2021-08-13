@@ -30,6 +30,10 @@ Any entry in this list is added to the deployment environment variables.
 
 ### Other role variables
 
+- `openzaak_pod_security_context.fsgroup` (sets mounted volume permissions to this GID)
+- `openzaak_service_account` (define service account to run the pod, leave blank to default back to "default")
+- `openzaak_create_service_account` (true or false, requires cluster admin permissions. This will create a custom SA account with the value from "openzaak_service_account", rbac binding and SecurityContextConstraints(scc), currently this SCC allows a range of 1000-2000. Needed especially for openshift platforms, the default SA uses an SCC that does not allow low GID ranges. Contact your cluster administrator for more information.)
+
 See `./defaults/main.yml` for the remainder.
 
 Dependencies

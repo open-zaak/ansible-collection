@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: openzaak
+    app.kubernetes.io/version: "{{ openzaak_version }}"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/managed-by: Ansible
+  annotations: {{ openzaak_ingress_annotations }}
+    
+spec:
+{% if openzaak_use_tls %}
+  tls:
+    - hosts:
+        - "{{ openzaak_domain }}"
+      secretName: "openzaak-tls-secrets"
+{% endif %}
+  rules:
+    - host: "{{ openzaak_domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openzaak-nginx
+                port:
+                  number: 8080
+

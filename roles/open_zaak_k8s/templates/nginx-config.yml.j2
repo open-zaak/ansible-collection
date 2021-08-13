@@ -21,7 +21,7 @@ data:
 
   default.conf: |
     server {
-        listen       80 default_server;
+        listen       8080 default_server;
         server_name  {{ openzaak_domain }} localhost{% if openzaak_extra_hosts %} {{ openzaak_extra_hosts | join(' ') }}{% endif %};
         server_tokens off;
 
