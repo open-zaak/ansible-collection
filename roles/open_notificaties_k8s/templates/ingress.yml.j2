@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: opennotificaties
+    app.kubernetes.io/version: "{{ opennotificaties_version }}"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/managed-by: Ansible
+  annotations: {{ opennotificaties_ingress_annotations }}
+
+spec:
+{% if opennotificaties_use_tls %}
+  tls:
+    - hosts:
+        - "{{ opennotificaties_domain }}"
+      secretName: "opennotificaties-tls-secrets"
+{% endif %}
+  rules:
+    - host: "{{ opennotificaties_domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opennotificaties
+                port:
+                  number: 8000
+

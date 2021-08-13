@@ -1,0 +1,11 @@
+---
+
+- name: Install Ingress Route
+  k8s:
+    state: present
+    name: opennotificaties
+    namespace: "{{ opennotificaties_namespace }}"
+    definition: "{{ lookup('template', opennotificaties_ingress_tpl|default('ingress.yml.j2')) | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes

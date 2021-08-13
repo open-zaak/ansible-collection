@@ -1,0 +1,13 @@
+---
+
+# Set up the TLS secrets
+
+- name: Install TLS secrets
+  k8s:
+    state: present
+    name: opennotificaties-tls-secrets
+    namespace: "{{ opennotificaties_namespace }}"
+    definition: "{{ lookup('template', 'tls.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes

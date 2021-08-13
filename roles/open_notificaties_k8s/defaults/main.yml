@@ -8,6 +8,11 @@ opennotificaties_instance: prod
 # Ingress/routing details
 opennotificaties_domain: open-notificaties.gemeente.nl
 opennotificaties_use_traefik_crd: yes
+# uncomment to provide custom ingress template, defaults to 'ingress.yml.j2'
+# opennotificaties_ingress_tpl:
+
+# provide ingress_annotations
+opennotificaties_ingress_annotations: ''
 
 # Django config parameters
 opennotificaties_secret_key: override-me
@@ -51,3 +56,18 @@ opennotificaties_celery_result_backend: "{{ opennotificaties_celery_broker_url }
 opennotificaties_rabbitmq_resource_limits:
   memory: "500Mi"
   cpu: "250m"
+
+# Use TLS
+opennotificaties_use_tls: false
+# Provide tls secrets when opennotificaties_use_tls is set to true
+opennotificaties_tls_secrets:
+  crt: ''
+  key: ''
+
+# Pod security
+opennotificaties_service_account: ''
+opennotificaties_create_service_account: false
+opennotificaties_pod_security_context:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000

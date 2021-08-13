@@ -2,9 +2,14 @@
 
 - import_tasks: namespace.yml
 - import_tasks: secrets.yml
+- import_tasks: sa_account.yml
+  when: opennotificaties_create_service_account
 - import_tasks: services.yml
 
 - import_tasks: deployments.yml
 
-- import_tasks: ingress_routes.yml
+- import_tasks: tls.yml
+  when: opennotificaties_use_tls
+
+- import_tasks: ingress.yml
   when: opennotificaties_use_traefik_crd
