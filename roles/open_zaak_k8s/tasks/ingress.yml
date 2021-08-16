@@ -5,7 +5,7 @@
     state: present
     name: openzaak
     namespace: "{{ openzaak_namespace }}"
-    definition: "{{ lookup('template', 'ingress.yml.j2') | from_yaml }}"
+    definition: "{{ lookup('template', openzaak_ingress_tpl|default('ingress.yml.j2')) | from_yaml }}"
     validate:
       fail_on_error: yes
       strict: yes

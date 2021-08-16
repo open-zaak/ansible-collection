@@ -51,3 +51,11 @@ spec:
             port: 6379
           initialDelaySeconds: 15
           periodSeconds: 20
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+      - emptyDir: {}
+        name: data
+      serviceAccountName: "{{ openzaak_service_account| default('default') }}"
+      securityContext: {{ opennotificaties_pod_security_context }}

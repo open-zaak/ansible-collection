@@ -47,3 +47,12 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 6379
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+      - emptyDir: {}
+        name: data
+
+      serviceAccountName: "{{ openzaak_service_account| default('default') }}"
+      securityContext: {{ opennotificaties_pod_security_context }}            
