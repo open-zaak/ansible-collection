@@ -48,11 +48,15 @@ spec:
           tcpSocket:
             port: 6379
         volumeMounts:
-        - mountPath: /data
-          name: data
+        - mountPath: /redis-config
+          name: config
       volumes:
-      - emptyDir: {}
-        name: data
+        - name: config
+          configMap:
+            name: {{ opennotificaties_redis_config_name }}
+            items:
+            - key: redis-config
+              path: redis.conf
 
       serviceAccountName: "{{ openzaak_service_account| default('default') }}"
       securityContext: {{ opennotificaties_pod_security_context }}            

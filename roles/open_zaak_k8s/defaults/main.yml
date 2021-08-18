@@ -71,3 +71,5 @@ openzaak_pod_security_context:
   runAsUser: 1000
   runAsGroup: 1000
   fsGroup: 1000
+
+openzaak_redis_config_name: redis-config

@@ -52,5 +52,16 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 20
 
+        volumeMounts:
+        - mountPath: /redis-config
+          name: config
+      volumes:
+        - name: config
+          configMap:
+            name: {{ openzaak_redis_config_name }}
+            items:
+            - key: redis-config
+              path: redis.conf
+
       serviceAccountName: "{{ openzaak_service_account| default('default') }}"
       securityContext: {{ opennotificaties_pod_security_context }}
