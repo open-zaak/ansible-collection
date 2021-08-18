@@ -33,6 +33,9 @@ spec:
       containers:
       - name: cache
         image: redis:5.0
+        command:
+          - redis-server
+          - "/redis-config/redis.conf"
 
         resources:
           requests:
