@@ -18,7 +18,7 @@
   k8s:
     state: present
     name: "{{ openzaak_redis_config_name }}"
-    namespace: "{{ django_app_k8s_namespace }}"
+    namespace: "{{ openzaak_namespace }}"
     definition: "{{ lookup('template', 'redis-config.yml.j2') | from_yaml }}"
     validate:
       fail_on_error: yes

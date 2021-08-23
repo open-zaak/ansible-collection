@@ -8,3 +8,13 @@
     validate:
       fail_on_error: yes
       strict: yes
+
+- name: Set up redis config
+  k8s:
+    state: present
+    name: "{{ opennotificaties_redis_config_name }}"
+    namespace: "{{ opennotificaties_namespace }}"
+    definition: "{{ lookup('template', 'redis-config.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
