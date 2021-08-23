@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: Ansible
   annotations: {{ openzaak_ingress_annotations }}
     
+     
 spec:
 {% if openzaak_use_tls %}
   tls:
@@ -26,4 +27,3 @@ spec:
                 name: openzaak-nginx
                 port:
                   number: 8080
-

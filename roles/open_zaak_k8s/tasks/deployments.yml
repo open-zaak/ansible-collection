@@ -7,7 +7,7 @@
 - name: Set up Redis cache
   k8s:
     state: present
-    name: openzaak-cache
+    name: openzaak-redis
     namespace: "{{ openzaak_namespace }}"
     definition: "{{ lookup('template', 'redis.yml.j2') | from_yaml }}"
     validate:

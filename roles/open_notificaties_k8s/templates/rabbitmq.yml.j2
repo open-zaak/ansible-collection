@@ -64,3 +64,5 @@ spec:
                 name: opennotificaties-secrets
                 key: RABBITMQ_DEFAULT_PASS
 
+      serviceAccountName: "{{ openzaak_service_account| default('default') }}"
+      securityContext: {{ opennotificaties_pod_security_context }}
