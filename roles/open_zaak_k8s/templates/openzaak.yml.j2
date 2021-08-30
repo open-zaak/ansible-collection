@@ -34,6 +34,8 @@ spec:
         - name: private-storage
           persistentVolumeClaim:
             claimName: "{{ openzaak_storage_name }}"
+
+      initContainers: {{ openzaak_init_containers }}
 {% endif %}
 
       containers:
