@@ -68,8 +68,18 @@ openzaak_tls_secrets:
 openzaak_service_account: ''
 openzaak_create_service_account: false
 openzaak_pod_security_context:
-  runAsUser: 1000
-  runAsGroup: 1000
+  # runAsUser: 1000
+  # runAsGroup: 1000
   fsGroup: 1000
 
 openzaak_redis_config_name: redis-config
+
+# migration because 1.5.0 dropped privileges
+openzaak_init_containers:
+  - name: volume-perms
+    image: busybox:latest
+    command: ['chown', '-R', '1000:1000', '/app/private-media']
+    volumeMounts:
+      - name: private-storage
+        mountPath: /app/private-media
+        subPath: openzaak/{{ openzaak_instance }}/private-media
