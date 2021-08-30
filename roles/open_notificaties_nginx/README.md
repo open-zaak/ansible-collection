@@ -40,6 +40,10 @@ However, in configurations where SSL termination is performed _before_ nginx (be
 multiple reverse proxies, for example), you should set this to `'"https"'` otherwise
 Open Notificaties is incorrectly told it's accessed over `http` rather than `https`.
 
+`opennotificaties_nginx_location_prefix` is the location prefix to use. If this nginx instance
+is behind another load balancer and the subpath is not stripped off, you should set this.
+Defaults to the value of `opennotificaties_subpath` if set, otherwise `/`.
+
 `opennotificaties_generate_dhparam: no`: in the past, it was required to generate stronger
 DH-parameters, but on modern versions of NGINX and OS'es, this is not needed anymore.
 If set to `true`, the parameters will be generated and included in the NGINX config.

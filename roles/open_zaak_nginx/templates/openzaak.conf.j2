@@ -1,7 +1,7 @@
 upstream openzaak {
-    {% for replica in openzaak_replicas %}
-        server 127.0.0.1:{{ replica.port }};
-    {% endfor %}
+{% for replica in openzaak_replicas %}
+    server 127.0.0.1:{{ replica.port }};
+{% endfor %}
 }
 
 {% if openzaak_ssl %}
@@ -83,7 +83,7 @@ server {
 
     {% endif %}
 
-    location / {
+    location {{ lookup('template', 'location_prefix.j2') | trim }} {
         proxy_pass_header Server;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -99,7 +99,7 @@ server {
         proxy_pass http://openzaak;
     }
 
-    location /private-media/ {
+    location {{ lookup('template', 'location_prefix.j2') | trim }}private-media/ {
         internal;
         alias {{ openzaak_volume_path | mandatory }}/;
     }

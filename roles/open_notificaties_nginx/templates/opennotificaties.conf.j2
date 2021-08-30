@@ -82,7 +82,7 @@ server {
 
     {% endif %}
 
-    location / {
+    location {{ lookup('template', 'location_prefix.j2') | trim }} {
         proxy_pass_header Server;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
