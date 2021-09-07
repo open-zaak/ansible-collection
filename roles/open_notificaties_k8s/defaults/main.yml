@@ -46,6 +46,8 @@ opennotificaties_celery_resource_limits:
 opennotificaties_rabbitmq:
   user: "opennotificaties-{{ opennotificaties_instance }}"
   password: "opennotificaties-{{ opennotificaties_instance }}"
+  rabbitmq_host: opennotificaties-rabbitmq
+  rabbitmq_port: 5432
 
 opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@opennotificaties-rabbitmq:5672/%2F"
 opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@opennotificaties-rabbitmq:5672//"
