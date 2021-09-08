@@ -1,6 +1,7 @@
 ---
 
 - import_tasks: namespace.yml
+- import_tasks: config.yml
 - import_tasks: secrets.yml
 - import_tasks: sa_account.yml
   when: opennotificaties_create_service_account
