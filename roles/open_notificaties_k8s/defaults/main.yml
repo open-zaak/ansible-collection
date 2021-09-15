@@ -43,6 +43,10 @@ opennotificaties_celery_resource_limits:
   memory: "1Gi"
   cpu: "500m"
 
+opennotificaties_flower_resource_limits:
+  memory: "500Mi"
+  cpu: "500m"
+
 opennotificaties_rabbitmq:
   user: "opennotificaties-{{ opennotificaties_instance }}"
   password: "opennotificaties-{{ opennotificaties_instance }}"
@@ -51,7 +55,11 @@ opennotificaties_rabbitmq:
 
 opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@opennotificaties-rabbitmq:5672/%2F"
 opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq.user }}:{{ opennotificaties_rabbitmq.password }}@opennotificaties-rabbitmq:5672//"
-opennotificaties_celery_result_backend: "{{ opennotificaties_celery_broker_url }}"
+opennotificaties_celery_result_backend: "redis://opennotificaties-cache:6379/1"
+
+opennotificaties_flower_user: flower
+opennotificaties_flower_password: flower
+opennotificaties_flower_basic_auth: "{{ opennotificaties_flower_user }}:{{ opennotificaties_flower_password }}"
 
 # https://www.rabbitmq.com/production-checklist.html#resource-limits-ram
 # rabbitmq needs AT LEAST 256MB

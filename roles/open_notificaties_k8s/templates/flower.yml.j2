@@ -1,0 +1,60 @@
+---
+
+# can't name flower - https://github.com/mher/flower/issues/738
+
+kind: Deployment
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: monitoring
+    app.kubernetes.io/instance: "{{ opennotificaties_instance }}"
+    app.kubernetes.io/version: "latest"
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: open-notificaties
+    app.kubernetes.io/managed-by: Ansible
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: monitoring
+      app.kubernetes.io/instance: "{{ opennotificaties_instance }}"
+      app.kubernetes.io/part-of: open-notificaties
+  template:
+    metadata:
+      name: monitoring
+      labels:
+        app.kubernetes.io/name: monitoring
+        app.kubernetes.io/instance: "{{ opennotificaties_instance }}"
+        app.kubernetes.io/version: "latest"
+        app.kubernetes.io/component: monitoring
+        app.kubernetes.io/part-of: open-notificaties
+        app.kubernetes.io/managed-by: Ansible
+    spec:
+      containers:
+      - name: monitoring
+        image: {{ opennotificaties_image }}
+
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits: {{ opennotificaties_flower_resource_limits }}
+
+        command: ["/celery_flower.sh"]
+
+        readinessProbe:
+          tcpSocket: # use TCP check because of Basic Auth
+            port: 5555
+          initialDelaySeconds: 10
+          periodSeconds: 30
+
+        livenessProbe:
+          tcpSocket:
+            port: 5555
+          initialDelaySeconds: 15
+          periodSeconds: 30
+
+        env: {{ lookup('template', 'env.yml.j2') | from_yaml }}
+
+      serviceAccountName: "{{ opennotificaties_service_account| default('default') }}"
+      securityContext: {{ opennotificaties_pod_security_context }}
