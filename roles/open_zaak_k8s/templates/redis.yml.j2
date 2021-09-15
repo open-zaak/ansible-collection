@@ -67,4 +67,4 @@ spec:
               path: redis.conf
 
       serviceAccountName: "{{ openzaak_service_account| default('default') }}"
-      securityContext: {{ opennotificaties_pod_security_context }}
+      securityContext: {{ openzaak_pod_security_context }}
