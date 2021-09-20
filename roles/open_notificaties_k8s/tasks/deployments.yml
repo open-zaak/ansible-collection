@@ -47,3 +47,16 @@
       strict: yes
   vars:
     secrets_version: "{{ opennotificaties_secrets.result.metadata.resourceVersion }}"
+
+
+- name: Set up celery flower
+  k8s:
+    state: present
+    name: opennotificaties-monitoring
+    namespace: "{{ opennotificaties_namespace }}"
+    definition: "{{ lookup('template', 'flower.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  vars:
+    secrets_version: "{{ opennotificaties_secrets.result.metadata.resourceVersion }}"
