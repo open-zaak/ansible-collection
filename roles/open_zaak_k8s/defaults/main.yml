@@ -12,6 +12,7 @@ openzaak_extra_allowed_hosts:
   - openzaak  # service name that nginx proxies to
 openzaak_use_x_forwarded_host: false
 openzaak_use_traefik_crd: false
+openzaak_setup_ingress: "{{ openzaak_use_traefik_crd }}"  # backwards compatible
 
 # uncomment to provide custom ingress template, defaults to 'ingress.yml.j2'
 # openzaak_ingress_tpl:

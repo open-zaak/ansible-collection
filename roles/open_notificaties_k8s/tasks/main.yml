@@ -13,4 +13,4 @@
   when: opennotificaties_use_tls
 
 - import_tasks: ingress.yml
-  when: opennotificaties_use_traefik_crd
+  when: opennotificaties_setup_ingress

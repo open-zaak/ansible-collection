@@ -7,7 +7,8 @@ opennotificaties_instance: prod
 
 # Ingress/routing details
 opennotificaties_domain: open-notificaties.gemeente.nl
-opennotificaties_use_traefik_crd: yes
+opennotificaties_use_traefik_crd: true
+opennotificaties_setup_ingress: "{{ opennotificaties_use_traefik_crd }}"
 # uncomment to provide custom ingress template, defaults to 'ingress.yml.j2'
 # opennotificaties_ingress_tpl:
 

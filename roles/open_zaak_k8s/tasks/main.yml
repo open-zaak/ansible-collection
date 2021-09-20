@@ -15,4 +15,4 @@
 - import_tasks: deployments.yml
 
 - import_tasks: ingress.yml
-  when: openzaak_use_traefik_crd
+  when: openzaak_setup_ingress
