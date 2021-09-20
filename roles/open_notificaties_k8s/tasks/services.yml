@@ -22,13 +22,22 @@
       fail_on_error: yes
       strict: yes
 
-
 - name: Set up Open Notificaties service
   k8s:
     state: present
     name: opennotificaties
     namespace: "{{ opennotificaties_namespace }}"
     definition: "{{ lookup('template', 'opennotificaties-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+
+- name: Set up the flower service
+  k8s:
+    state: present
+    name: opennotificaties-monitoring
+    namespace: "{{ opennotificaties_namespace }}"
+    definition: "{{ lookup('template', 'flower-svc.yml.j2') | from_yaml }}"
     validate:
       fail_on_error: yes
       strict: yes
