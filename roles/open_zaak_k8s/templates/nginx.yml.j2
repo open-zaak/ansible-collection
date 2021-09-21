@@ -46,9 +46,7 @@ spec:
         image: nginxinc/nginx-unprivileged:{{ openzaak_nginx_version }}
 
         resources:
-          requests:
-            memory: "100Mi"
-            cpu: "250m"
+          requests: {{ openzaak_nginx_resource_requests }}
           limits: {{ openzaak_nginx_resource_limits }}
 
         readinessProbe:

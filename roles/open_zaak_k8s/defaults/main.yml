@@ -36,6 +36,14 @@ openzaak_cache_limits:
   memory: "200Mi"
   cpu: "250m"
 
+openzaak_redis_resource_requests:
+  memory: "100Mi"
+  cpu: "100m"
+
+openzaak_redis_resource_limits:
+  memory: "500Mi"
+  cpu: "500m"
+
 openzaak_extra_env: []
 
 openzaak_version: latest
@@ -57,6 +65,11 @@ openzaak_nginx_replicas: 2
 openzaak_nginx_resource_limits:
   cpu: "500m"
   memory: "500Mi"
+
+openzaak_nginx_resource_requests:
+  memory: "100Mi"
+  cpu: "250m"
+
 
 # Use TLS
 openzaak_use_tls: false

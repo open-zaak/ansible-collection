@@ -44,9 +44,25 @@ opennotificaties_celery_resource_limits:
   memory: "1Gi"
   cpu: "500m"
 
+opennotificaties_celery_resource_requests:
+  memory: "500Mi"
+  cpu: "100m"
+
 opennotificaties_flower_resource_limits:
   memory: "500Mi"
   cpu: "500m"
+
+opennotificaties_flower_resource_requests:
+  memory: "100Mi"
+  cpu: "100m"  
+
+opennotificaties_redis_resource_limits:
+  memory: "1Gi"
+  cpu: "500m"
+
+opennotificaties_redis_resource_requests:
+  memory: "100Mi"
+  cpu: "100m"
 
 opennotificaties_rabbitmq:
   user: "opennotificaties-{{ opennotificaties_instance }}"
@@ -67,6 +83,10 @@ opennotificaties_flower_basic_auth: "{{ opennotificaties_flower_user }}:{{ openn
 opennotificaties_rabbitmq_resource_limits:
   memory: "500Mi"
   cpu: "250m"
+
+opennotificaties_rabbitmq_resource_requests:
+  memory: "300Mi"
+  cpu: "100m"
 
 # Use TLS
 opennotificaties_use_tls: false

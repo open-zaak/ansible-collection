@@ -35,9 +35,7 @@ spec:
         image: {{ opennotificaties_image }}
 
         resources:
-          requests:
-            memory: "100Mi"
-            cpu: "100m"
+          requests: {{ opennotificaties_flower_resource_requests }}
           limits: {{ opennotificaties_flower_resource_limits }}
 
         command: ["/celery_flower.sh"]
