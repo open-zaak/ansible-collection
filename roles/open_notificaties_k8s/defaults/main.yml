@@ -31,6 +31,8 @@ opennotificaties_cache_resource_limits:
   memory: "200Mi"
   cpu: "250m"
 
+opennotificaties_extra_env: []
+
 opennotificaties_version: latest
 opennotificaties_image: openzaak/open-notificaties:{{ opennotificaties_version }}
 opennotificaties_replicas: 3
