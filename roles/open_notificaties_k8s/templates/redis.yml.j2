@@ -38,10 +38,8 @@ spec:
           - "/redis-config/redis.conf"
           
         resources:
-          requests:
-            memory: "100Mi"
-            cpu: "100m"
-          limits: {{ opennotificaties_cache_resource_limits }}
+          requests: {{ opennotificaties_redis_resource_requests }}
+          limits: {{ opennotificaties_redis_resource_limits }}
 
         readinessProbe:
           tcpSocket:

@@ -38,10 +38,8 @@ spec:
           - "/redis-config/redis.conf"
 
         resources:
-          requests:
-            memory: "100Mi"
-            cpu: "100m"
-          limits: {{ openzaak_cache_limits }}
+          requests: {{ openzaak_redis_resource_requests }}
+          limits: {{ openzaak_redis_resource_limits }}
 
         readinessProbe:
           tcpSocket:

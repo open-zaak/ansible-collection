@@ -35,9 +35,7 @@ spec:
         image: {{ opennotificaties_image }}
         imagePullPolicy: Always
         resources:
-          requests:
-            memory: "500Mi"
-            cpu: "100m"
+          requests: {{ opennotificaties_celery_resource_requests }}
           limits: {{ opennotificaties_celery_resource_limits }}
 
         # TODO
