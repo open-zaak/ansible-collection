@@ -114,3 +114,5 @@ opennotificaties_extra_celery_labels: []
 opennotificaties_extra_flower_labels: []
 
 opennotificaties_extra_redis_labels: []
+
+opennotificaties_extra_rabbitmq_labels: []

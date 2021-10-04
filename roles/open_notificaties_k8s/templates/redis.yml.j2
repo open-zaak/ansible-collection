@@ -31,7 +31,7 @@ spec:
         app.kubernetes.io/managed-by: Ansible
 {% for label in opennotificaties_extra_redis_labels %}
         {{ label }}: {{ opennotificaties_extra_redis_labels[label] }}
-{% endfor %}        
+{% endfor %}
     spec:
       containers:
       - name: cache

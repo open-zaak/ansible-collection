@@ -28,6 +28,9 @@ spec:
         app.kubernetes.io/component: async-workers
         app.kubernetes.io/part-of: open-notificaties
         app.kubernetes.io/managed-by: Ansible
+{% for label in opennotificaties_extra_rabbitmq_labels %}
+        {{ label }}: {{ opennotificaties_extra_rabbitmq_labels[label] }}
+{% endfor %}        
     spec:
       containers:
       - name: rabbitmq
