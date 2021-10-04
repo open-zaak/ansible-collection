@@ -27,6 +27,9 @@ spec:
         app.kubernetes.io/component: backend
         app.kubernetes.io/part-of: open-zaak
         app.kubernetes.io/managed-by: Ansible
+{% for label in openzaak_extra_openzaak_labels %}
+        {{ label }}: {{ openzaak_extra_openzaak_labels[label] }}
+{% endfor %}        
     spec:
 
 {% if openzaak_provision_storage %}
