@@ -29,6 +29,9 @@ spec:
         app.kubernetes.io/component: cache
         app.kubernetes.io/part-of: open-notificaties
         app.kubernetes.io/managed-by: Ansible
+{% for label in opennotificaties_extra_redis_labels %}
+        {{ label }}: {{ opennotificaties_extra_redis_labels[label] }}
+{% endfor %}        
     spec:
       containers:
       - name: cache

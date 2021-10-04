@@ -29,6 +29,9 @@ spec:
         app.kubernetes.io/component: cache
         app.kubernetes.io/part-of: open-zaak
         app.kubernetes.io/managed-by: Ansible
+{% for label in openzaak_extra_redis_labels %}
+        {{ label }}: {{ openzaak_extra_redis_labels[label] }}
+{% endfor %}
     spec:
       containers:
       - name: cache

@@ -106,3 +106,11 @@ opennotificaties_pod_security_context:
   fsGroup: 1000
 
 opennotificaties_redis_config_name: redis-config
+
+opennotificaties_extra_opennotificaties_labels: []
+
+opennotificaties_extra_celery_labels: []
+
+opennotificaties_extra_flower_labels: []
+
+opennotificaties_extra_redis_labels: []

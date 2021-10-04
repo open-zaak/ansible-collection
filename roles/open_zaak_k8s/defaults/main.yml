@@ -97,3 +97,10 @@ openzaak_init_containers:
       - name: private-storage
         mountPath: /app/private-media
         subPath: openzaak/{{ openzaak_instance }}/private-media
+
+# Define extra pod labels
+openzaak_extra_openzaak_labels: []
+
+openzaak_extra_nginx_labels: []
+
+openzaak_extra_redis_labels: []
