@@ -26,6 +26,8 @@ openzaak_extra_env: []
 #   - /etc/ssl/certs:/certs:ro
 openzaak_extra_volumes: []
 
+openzaak_1_5_upgrade: false
+
 openzaak_version: latest
 openzaak_image: docker.io/openzaak/open-zaak:{{ openzaak_version }}
 

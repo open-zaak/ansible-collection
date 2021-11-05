@@ -11,7 +11,7 @@
   file:
     path: "{{ openzaak_volume.volume.Mountpoint }}"
     state: directory
-    owner: openzaak
-    group: openzaak
-    recurse: no
+    owner: 1000
+    group: 1000
+    recurse: "{{ openzaak_1_5_upgrade }}"
     mode: u=rwx,g=rx,o-rwx

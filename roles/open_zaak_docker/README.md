@@ -12,6 +12,15 @@ Requirements
 Role Variables
 --------------
 
+### Open Zaak 1.5 upgrade
+
+If you're upgrading an Open Zaak installation older than 1.5.0, you should set
+`openzaak_1_5_upgrade: true`, which will recursively fix the file permissions of
+uploaded files.
+
+If you didn't use the Documenten API or you use the CMIS adapter with Open Zaak, then
+this flag has no effect.
+
 ### SSL/NGINX
 
 See the [`open_zaak_nginx` role documentation](../open_zaak_nginx/README.md).
