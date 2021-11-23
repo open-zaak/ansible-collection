@@ -14,4 +14,6 @@
     src: env.j2
     dest: /home/opennotificaties/.env
     mode: 0400
+    owner: "1000"
+    group: "1000"    
   register: opennotificaties_env_file_template
