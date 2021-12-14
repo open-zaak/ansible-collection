@@ -25,7 +25,7 @@
 - name: Ensure nginx user exists
   user:
     name: "{{ openzaak_nginx_user }}"
-    groups: "1000"
+    groups: openzaak
     state: present
 
 # /var/lib/docker/volumes is by default only enter-able by the root user. However,
