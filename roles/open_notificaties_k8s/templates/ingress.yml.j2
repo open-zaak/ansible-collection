@@ -26,7 +26,7 @@ spec:
                 name: opennotificaties
                 port:
                   number: 8000
-
+{% if opennotificaties_flower_ingress %}
           - path: /_flower/
             pathType: ImplementationSpecific
             backend:
@@ -34,3 +34,4 @@ spec:
                 name: opennotificaties-monitoring
                 port:
                   number: 5555
+{% endif %}
