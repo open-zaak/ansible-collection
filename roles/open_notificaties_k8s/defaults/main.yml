@@ -79,6 +79,7 @@ opennotificaties_celery_result_backend: "redis://opennotificaties-cache:6379/1"
 opennotificaties_flower_user: flower
 opennotificaties_flower_password: flower
 opennotificaties_flower_basic_auth: "{{ opennotificaties_flower_user }}:{{ opennotificaties_flower_password }}"
+opennotificaties_flower_ingress: false
 
 # https://www.rabbitmq.com/production-checklist.html#resource-limits-ram
 # rabbitmq needs AT LEAST 256MB
