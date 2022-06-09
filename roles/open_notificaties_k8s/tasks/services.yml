@@ -41,3 +41,4 @@
     validate:
       fail_on_error: yes
       strict: yes
+  when: opennotificaties_flower_ingress

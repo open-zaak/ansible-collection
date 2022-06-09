@@ -58,6 +58,5 @@
     validate:
       fail_on_error: yes
       strict: yes
-  when: opennotificaties_flower_ingress      
   vars:
     secrets_version: "{{ opennotificaties_secrets.result.metadata.resourceVersion }}"
