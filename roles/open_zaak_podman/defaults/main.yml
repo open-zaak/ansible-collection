@@ -42,3 +42,9 @@ openzaak_replicas:
 # used when fixing file permissions/user groups to read private media
 openzaak_nginx_user: "{{ nginx_main_template.user|default('nginx') }}"
 
+openzaak_celery_broker_url: "redis://localhost:6379/2"
+openzaak_celery_result_backend: "{{ openzaak_celery_broker_url }}"
+
+openzaak_worker_replicas:
+  - name: openzaak-worker-0
+  - name: openzaak-worker-1

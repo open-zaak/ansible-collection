@@ -40,6 +40,27 @@
   notify:
     - restart openzaak
 
+- name: Run the Open Zaak background workers
+  containers.podman.podman_container:
+    name: "{{ item.name }}"
+    pod: openzaak
+    image: "{{ openzaak_image }}"
+    state: present  # do not start them - this is managed through systemd
+    volumes: "{{ lookup('template', 'volumes.yml.j2') | from_yaml }}"
+    # userns: keep-id -> does not work with pods, see
+    # https://github.com/containers/podman/issues/6843#issuecomment-653016772
+    env_file: "{{ openzaak_env_file }}"
+    recreate: "{{ openzaak_env_file_template.changed }}"
+    env:
+      DB_HOST: "{{ openzaak_db_host }}"
+      DB_PORT: "{{ openzaak_db_port | string }}"
+      SECRET_KEY: "{{ openzaak_secret_key }}"
+      SUBPATH: "{{ openzaak_subpath }}"
+    command: ["/celery_worker.sh"]
+  with_items: "{{ openzaak_worker_replicas }}"
+  notify:
+    - restart openzaak
+
 - name: Get pod state
   containers.podman.podman_pod_info:
     name: openzaak
