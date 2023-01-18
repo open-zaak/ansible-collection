@@ -53,7 +53,7 @@ opennotificaties_rabbitmq_pass: rabbit
 
 opennotificaties_publish_broker_url: "amqp://{{ opennotificaties_rabbitmq_user }}:{{ opennotificaties_rabbitmq_pass }}@localhost:5672/%2F"
 opennotificaties_celery_broker_url: "amqp://{{ opennotificaties_rabbitmq_user }}:{{ opennotificaties_rabbitmq_pass }}@localhost:5672//"
-opennotificaties_celery_result_backend: "{{ opennotificaties_celery_broker_url }}"
+opennotificaties_celery_result_backend: "redis://localhost:6379/{{ opennotificaties_cache_db }}"
 
 opennotificaties_worker_replicas:
   - name: opennotificaties-worker-0
