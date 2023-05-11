@@ -5,8 +5,6 @@
 - import_tasks: dependencies.yml
 
 - import_tasks: volumes.yml
-  become: true
-  become_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: containers.yml
   become: true
