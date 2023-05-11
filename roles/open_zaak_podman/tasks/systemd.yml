@@ -8,6 +8,8 @@
     name: openzaak
     dest: /home/{{ openzaak_podman_user }}/.config/systemd/user
     restart_policy: always
+  become: true
+  become_user: "{{ openzaak_podman_user }}"
 
 - name: Enable linger
   command: loginctl enable-linger
@@ -21,3 +23,5 @@
     enabled: true
     scope: user
     daemon_reload: true
+  become: true
+  become_user: "{{ openzaak_podman_user }}"
