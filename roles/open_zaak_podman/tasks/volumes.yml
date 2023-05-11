@@ -6,7 +6,7 @@
   register: openzaak_volume
   notify:
     - print volume mountpoint
-  become: yes
+  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 - name: Set volume permissions
@@ -15,5 +15,5 @@
     state: directory
     owner: "{{ openzaak_podman_user }}"
     group: "{{ openzaak_podman_user }}"
-    recurse: no
+    recurse: true
     mode: u=rwx,g=rx,o-rwx

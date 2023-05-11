@@ -5,15 +5,15 @@
 - import_tasks: dependencies.yml
 
 - import_tasks: volumes.yml
-  become: yes
+  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: containers.yml
-  become: yes
+  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: systemd.yml
-  become: yes
+  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 # load the nginx template
