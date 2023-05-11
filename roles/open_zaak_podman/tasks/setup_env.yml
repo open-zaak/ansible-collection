@@ -6,13 +6,11 @@
   ansible.builtin.user:
     name: "{{ openzaak_podman_user }}"
     comment: Podman user
-  become: true
 
 - name: Create application configuration directory
   file:
     path: /home/{{ openzaak_podman_user }}/openzaak/
     state: directory
-  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 - name: Setup the environment variables
@@ -23,14 +21,12 @@
   register: openzaak_env_file_template
   notify:
     - restart openzaak
-  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 - name: Ensure nginx user exists
   user:
     name: "{{ openzaak_nginx_user }}"
     state: present
-  become: true
 
 # /home/podman/.local/share/containers/storage/volumes is by default only enter-able by
 # the podman user. However, nginx on the host system serves the files for private media
@@ -42,7 +38,6 @@
   group:
     name: enter-container-volumes
     state: present
-  become: true
 
 - name: Ensure nginx user can enter container volumes
   user:
@@ -64,5 +59,4 @@
     - "/home/{{ openzaak_podman_user }}/.local/share/containers"
     - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage"
     - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes"
-  become: true
   become_user: "{{ openzaak_podman_user }}"
