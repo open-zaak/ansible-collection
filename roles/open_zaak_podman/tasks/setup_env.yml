@@ -6,17 +6,22 @@
   ansible.builtin.user:
     name: "{{ openzaak_podman_user }}"
     comment: Podman user
+  when: openzaak_podman_user_create
 
 - name: Create application configuration directory
   file:
     path: /home/{{ openzaak_podman_user }}/openzaak/
     state: directory
+    owner: "{{ openzaak_podman_user }}"
+    group: "{{ openzaak_podman_user }}"    
 
 - name: Setup the environment variables
   template:
     src: "{{ openzaak_env_template }}"
     dest: /home/{{ openzaak_podman_user }}/openzaak/.env
     mode: u=rwx,g-rwx,o-rwx
+    owner: "{{ openzaak_podman_user }}"
+    group: "{{ openzaak_podman_user }}"
   register: openzaak_env_file_template
   notify:
     - restart openzaak
@@ -48,6 +53,7 @@
   file:
     path: "{{ item }}"
     state: directory
+    owner: "{{ openzaak_podman_user }}"
     group: enter-container-volumes
     mode: g=x
   loop:

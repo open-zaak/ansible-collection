@@ -62,19 +62,20 @@
   notify:
     - restart openzaak
 
-# - name: Get pod state
-#   containers.podman.podman_pod_info:
-#     name: openzaak
-#   register: openzaak_pods
+- name: Get pod state
+  containers.podman.podman_pod_info:
+    name: openzaak
+  register: openzaak_pods
 
 # State is managed via systemd, which needs the PIDFILE, so we stop the pod (which
 # stops the containers). The tasks in systemd.yaml ensure that the service is running.
 # Note that there is a bug where stopped pods are destroyed, thereby breaking the
 # infra container ID reference, see:
 # https://github.com/containers/ansible-podman-collections/issues/215
-# - name: Ensure the pod is stopped
-#   command: podman pod stop openzaak
-#   when: openzaak_pods.pods[0].State == "Running"
-  # containers.podman.podman_pod:
-  #   name: openzaak
-  #   state: stopped
+# update May 11, 2023: This issue might be resolved
+- name: Ensure the pod is stopped
+  command: podman pod stop openzaak
+  when: openzaak_pods.pods[0].State == "Running"
+  containers.podman.podman_pod:
+    name: openzaak
+    state: stopped

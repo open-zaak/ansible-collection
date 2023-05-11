@@ -5,6 +5,7 @@ openzaak_subpath: /
 openzaak_ssl: yes
 
 openzaak_podman_user: podman
+openzaak_podman_user_create: false
 
 openzaak_secret_key: override-me
 

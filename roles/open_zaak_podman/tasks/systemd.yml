@@ -3,6 +3,11 @@
 # Generate and install the systemd units for the pod/containers
 # Reference: http://docs.podman.io/en/latest/markdown/podman-generate-systemd.1.html
 
+- name: Get user ID of podman user
+  getent:
+    database: passwd
+    key: "{{ openzaak_podman_user }}"
+
 - name: Systemd unit files for openzaak container must exist
   containers.podman.podman_generate_systemd:
     name: openzaak
@@ -12,9 +17,12 @@
   become_user: "{{ openzaak_podman_user }}"
 
 - name: Enable linger
-  command: loginctl enable-linger
-  args:
-    creates: "/var/lib/systemd/linger/{{ openzaak_podman_user }}"
+  command: loginctl enable-linger {{ openzaak_podman_user }}
+  become: true
+  become_user: "{{ openzaak_podman_user }}"
+  # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ getent_passwd[openzaak_podman_user][1] }}"
 
 - name: Enable service
   systemd:
@@ -25,3 +33,6 @@
     daemon_reload: true
   become: true
   become_user: "{{ openzaak_podman_user }}"
+  # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ getent_passwd[openzaak_podman_user][1] }}"  
