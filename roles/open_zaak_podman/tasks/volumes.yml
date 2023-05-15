@@ -9,11 +9,16 @@
   become: true
   become_user: "{{ openzaak_podman_user }}"
 
-- name: Set volume permissions
+- name: Ensure user group can enter container volumes directory
   file:
-    path: "{{ openzaak_volume.volume.Mountpoint }}"
+    path: "{{ item }}"
     state: directory
-    owner: "{{ openzaak_podman_user }}"
-    group: "{{ openzaak_podman_user }}"
-    recurse: true
-    mode: u=rwx,g=rx,o-rwx
+    mode: g=x
+  loop:
+    - "/home/{{ openzaak_podman_user }}"
+    - "/home/{{ openzaak_podman_user }}/.local"
+    - "/home/{{ openzaak_podman_user }}/.local/share"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes"
+    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes/openzaak-private-media"
