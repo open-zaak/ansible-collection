@@ -13,12 +13,10 @@
     name: openzaak
     dest: /home/{{ openzaak_podman_user }}/.config/systemd/user
     restart_policy: always
-  become: true
   become_user: "{{ openzaak_podman_user }}"
 
 - name: Enable linger
   command: loginctl enable-linger {{ openzaak_podman_user }}
-  become: true
   become_user: "{{ openzaak_podman_user }}"
   # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
   environment:

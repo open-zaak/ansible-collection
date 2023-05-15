@@ -11,7 +11,6 @@
   become_user: "{{ openzaak_podman_user }}"
 
 - import_tasks: systemd.yml
-  become: true
 
 # load the nginx template
 - import_role:
