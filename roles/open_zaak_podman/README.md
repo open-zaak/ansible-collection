@@ -68,6 +68,7 @@ Example Playbook
 
 ```yaml
 - hosts: app-servers
+  become: true
   roles:
     - role: geerlingguy.postgresql
       tags:
