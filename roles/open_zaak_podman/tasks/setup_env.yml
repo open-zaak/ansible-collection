@@ -13,7 +13,7 @@
     path: /home/{{ openzaak_podman_user }}/openzaak/
     state: directory
     owner: "{{ openzaak_podman_user }}"
-    group: "{{ openzaak_podman_user }}"    
+    group: "{{ openzaak_podman_user }}"
 
 - name: Setup the environment variables
   template:

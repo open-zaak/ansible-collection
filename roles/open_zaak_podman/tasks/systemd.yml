@@ -42,4 +42,4 @@
   become_user: "{{ openzaak_podman_user }}"
   # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
   environment:
-    XDG_RUNTIME_DIR: "/run/user/{{ getent_passwd[openzaak_podman_user][1] }}"  
+    XDG_RUNTIME_DIR: "/run/user/{{ getent_passwd[openzaak_podman_user][1] }}"
