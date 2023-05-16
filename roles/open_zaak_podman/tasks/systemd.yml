@@ -15,6 +15,15 @@
     restart_policy: always
   become_user: "{{ openzaak_podman_user }}"
 
+# See issue: https://github.com/containers/podman/pull/15777
+# If you are using podman version 2.3.1 >= ansible idempotence will leave this alone.
+- name: Fix systemd pod services
+  ansible.builtin.lineinfile:
+    path: /home/{{ openzaak_podman_user }}/.config/systemd/user/pod-openzaak.service
+    regexp: '^Requires=$'
+    line: 'Wants'
+    backrefs: true
+
 - name: Enable linger
   command: loginctl enable-linger {{ openzaak_podman_user }}
   become_user: "{{ openzaak_podman_user }}"
