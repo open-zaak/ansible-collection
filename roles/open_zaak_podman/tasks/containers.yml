@@ -16,8 +16,6 @@
     pod: openzaak
     image: docker.io/library/redis:5
     state: present  # do not start them - this is managed through systemd
-  notify:
-    - restart openzaak
 
 - name: Create the Open Zaak backend service
   containers.podman.podman_container:
@@ -36,10 +34,8 @@
       DB_PORT: "{{ openzaak_db_port | string }}"
       SECRET_KEY: "{{ openzaak_secret_key }}"
       SUBPATH: "{{ openzaak_subpath }}"
-
   with_items: "{{ openzaak_replicas }}"
-  notify:
-    - restart openzaak
+
 
 - name: Run the Open Zaak background workers
   containers.podman.podman_container:
@@ -59,5 +55,3 @@
       SUBPATH: "{{ openzaak_subpath }}"
     command: ["/celery_worker.sh"]
   with_items: "{{ openzaak_worker_replicas }}"
-  notify:
-    - restart openzaak

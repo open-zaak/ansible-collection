@@ -23,8 +23,6 @@
     owner: "{{ openzaak_podman_user }}"
     group: "{{ openzaak_podman_user }}"
   register: openzaak_env_file_template
-  notify:
-    - restart openzaak
 
 - name: Ensure nginx user exists
   user:
