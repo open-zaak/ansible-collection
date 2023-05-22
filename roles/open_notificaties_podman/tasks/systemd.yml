@@ -8,28 +8,39 @@
     database: passwd
     key: "{{ opennotificaties_podman_user }}"
 
-- name: Ensure the systemd unit dir exists
-  file:
-    path: "/home/{{ opennotificaties_podman_user }}/.config/systemd/user"
-    state: directory
+- name: Systemd unit files for openzaak container must exist
+  containers.podman.podman_generate_systemd:
+    name: opennotificaties
+    dest: /home/{{ opennotificaties_podman_user }}/.config/systemd/user
+    restart_policy: always
+    no_header: true
 
-- name: Template out systemd unit file
-  template:
-    src: pod.service.j2
-    dest: "/home/{{ opennotificaties_podman_user }}/.config/systemd/user/pod-opennotificaties.service"
-  vars:
-    user_id: "{{ getent_passwd[opennotificaties_podman_user][1] }}"
-  register: opennotificaties_systemd_unit
+# See issue: https://github.com/containers/podman/pull/15777
+# If you are using podman version 2.3.1 >= ansible idempotence will leave this alone.
+- name: Fix systemd pod services
+  ansible.builtin.lineinfile:
+    path: /home/{{ opennotificaties_podman_user }}/.config/systemd/user/pod-openzaak.service
+    regexp: '^Requires=$'
+    line: 'Wants'
+    backrefs: true
 
 - name: Enable linger
-  command: loginctl enable-linger
-  args:
-    creates: "/var/lib/systemd/linger/{{ opennotificaties_podman_user }}"
+  command: loginctl enable-linger {{ opennotificaties_podman_user }}
+  changed_when: false
+  become_user: "{{ opennotificaties_podman_user }}"
+  # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ getent_passwd[opennotificaties_podman_user][1] }}"
 
 - name: Enable service
   systemd:
     name: pod-opennotificaties.service
     state: started
-    enabled: yes
+    enabled: true
     scope: user
-    daemon_reload: "{{ opennotificaties_systemd_unit.changed }}"
+    daemon_reload: true
+  become: true
+  become_user: "{{ opennotificaties_podman_user }}"
+  # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ getent_passwd[opennotificaties_podman_user][1] }}"

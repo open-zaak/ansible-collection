@@ -18,8 +18,6 @@
     pod: opennotificaties
     image: docker.io/library/redis:5
     state: present  # do not start them - this is managed through systemd
-  notify:
-    - restart opennotificaties
 
 - name: Run the RabbitMQ message broker
   containers.podman.podman_container:
@@ -53,8 +51,6 @@
       SECRET_KEY: "{{ opennotificaties_secret_key }}"
       SUBPATH: "{{ opennotificaties_subpath }}"
   with_items: "{{ opennotificaties_replicas }}"
-  notify:
-    - restart opennotificaties
 
 - name: Run the Open Notificaties background workers
   containers.podman.podman_container:
@@ -76,24 +72,3 @@
       SUBPATH: "{{ opennotificaties_subpath }}"
     command: ["/celery_worker.sh"]
   with_items: "{{ opennotificaties_worker_replicas }}"
-  notify:
-    - restart opennotificaties
-
-# Prepare for systemd integration
-
-- name: Get pod state
-  containers.podman.podman_pod_info:
-    name: opennotificaties
-  register: opennotificaties_pods
-
-# State is managed via systemd, which needs the PIDFILE, so we stop the pod (which
-# stops the containers). The tasks in systemd.yaml ensure that the service is running.
-# Note that there is a bug where stopped pods are destroyed, thereby breaking the
-# infra container ID reference, see:
-# https://github.com/containers/ansible-podman-collections/issues/215
-- name: Ensure the pod is stopped
-  command: podman pod stop opennotificaties
-  when: opennotificaties_pods.pods[0].State == "Running"
-  # containers.podman.podman_pod:
-  #   name: opennotificaties
-  #   state: stopped
