@@ -13,6 +13,7 @@
     name: openzaak
     dest: /home/{{ openzaak_podman_user }}/.config/systemd/user
     restart_policy: always
+    no_header: true
   become_user: "{{ openzaak_podman_user }}"
 
 # See issue: https://github.com/containers/podman/pull/15777
@@ -26,6 +27,7 @@
 
 - name: Enable linger
   command: loginctl enable-linger {{ openzaak_podman_user }}
+  changed_when: false
   become_user: "{{ openzaak_podman_user }}"
   # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
   environment:

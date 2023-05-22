@@ -61,7 +61,3 @@
   with_items: "{{ openzaak_worker_replicas }}"
   notify:
     - restart openzaak
-
-  containers.podman.podman_pod:
-    name: openzaak
-    state: stopped
