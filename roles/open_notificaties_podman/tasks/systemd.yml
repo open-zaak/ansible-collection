@@ -14,6 +14,7 @@
     dest: /home/{{ opennotificaties_podman_user }}/.config/systemd/user
     restart_policy: always
     no_header: true
+  become_user: "{{ opennotificaties_podman_user }}"
 
 # See issue: https://github.com/containers/podman/pull/15777
 # If you are using podman version 2.3.1 >= ansible idempotence will leave this alone.
@@ -39,7 +40,6 @@
     enabled: true
     scope: user
     daemon_reload: true
-  become: true
   become_user: "{{ opennotificaties_podman_user }}"
   # Reference https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html#examples (last one) and https://access.redhat.com/discussions/6029491
   environment:
