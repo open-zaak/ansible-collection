@@ -7,7 +7,7 @@
     path: /home/{{ opennotificaties_podman_user }}/opennotificaties/
     state: directory
     owner: "{{ opennotificaties_podman_user }}"
-    group: "{{ opennotificaties_podman_user }}"    
+    group: "{{ opennotificaties_podman_user }}"
 
 - name: Setup the environment variables
   template:
@@ -15,5 +15,5 @@
     dest: /home/{{ opennotificaties_podman_user }}/opennotificaties/.env
     mode: u=rwx,g-rwx,o-rwx
     owner: "{{ opennotificaties_podman_user }}"
-    group: "{{ opennotificaties_podman_user }}"      
+    group: "{{ opennotificaties_podman_user }}"
   register: opennotificaties_env_file_template
