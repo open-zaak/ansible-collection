@@ -3,7 +3,7 @@ Open Zaak (on a VM with Podman)
 
 Deploy Open Zaak using [Podman](https://podman.io/).
 
-Tested on RHEL 8.3.
+Tested on RHEL 8.7 with podman version 4.2.0 and CentOS Stream 8 with podman version 4.3.1.
 
 Requirements
 ------------
@@ -68,6 +68,7 @@ Example Playbook
 
 ```yaml
 - hosts: app-servers
+  become: true
   roles:
     - role: geerlingguy.postgresql
       tags:

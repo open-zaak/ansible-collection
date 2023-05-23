@@ -2,23 +2,27 @@
 
 # Set up the environment files on the host machine
 
+- name: Create the podman user
+  ansible.builtin.user:
+    name: "{{ openzaak_podman_user }}"
+    comment: Podman user
+  when: openzaak_podman_user_create
+
 - name: Create application configuration directory
   file:
     path: /home/{{ openzaak_podman_user }}/openzaak/
     state: directory
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
+    owner: "{{ openzaak_podman_user }}"
+    group: "{{ openzaak_podman_user }}"
 
 - name: Setup the environment variables
   template:
     src: "{{ openzaak_env_template }}"
     dest: /home/{{ openzaak_podman_user }}/openzaak/.env
     mode: u=rwx,g-rwx,o-rwx
+    owner: "{{ openzaak_podman_user }}"
+    group: "{{ openzaak_podman_user }}"
   register: openzaak_env_file_template
-  notify:
-    - restart openzaak
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
 
 - name: Ensure nginx user exists
   user:
@@ -29,32 +33,10 @@
 # the podman user. However, nginx on the host system serves the files for private media
 # uploads, which runs as the nginx user.
 # Therefore, we change the group of /home/podman/.local/share/containers/storage/volumes
-# to add the +x permission, and add nginx to that group.
+# to add the +x permission, and add nginx to the podman group.
 
-- name: Create group to enter container volumes directory
-  group:
-    name: enter-container-volumes
-    state: present
-
-- name: Ensure nginx user can enter container volumes
+- name: Ensure nginx user is member of podman group
   user:
     name: "{{ openzaak_nginx_user }}"
     groups:
-      - enter-container-volumes
-      - "{{ openzaak_nginx_user }}"
-
-- name: Ensure user group can enter container volumes directory
-  file:
-    path: "{{ item }}"
-    state: directory
-    group: enter-container-volumes
-    mode: g=x
-  with_items:
-    - "/home/{{ openzaak_podman_user }}"
-    - "/home/{{ openzaak_podman_user }}/.local"
-    - "/home/{{ openzaak_podman_user }}/.local/share"
-    - "/home/{{ openzaak_podman_user }}/.local/share/containers"
-    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage"
-    - "/home/{{ openzaak_podman_user }}/.local/share/containers/storage/volumes"
-  become: yes
-  become_user: "{{ openzaak_podman_user }}"
+      - "{{ openzaak_podman_user }}"
