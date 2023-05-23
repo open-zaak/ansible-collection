@@ -2,17 +2,13 @@
 # tasks file for open_notificaties_podman---
 
 - import_tasks: setup_env.yml
-  become: yes
-  become_user: "{{ opennotificaties_podman_user }}"
 
 - import_tasks: dependencies.yml
+
 - import_tasks: containers.yml
-  become: yes
   become_user: "{{ opennotificaties_podman_user }}"
 
 - import_tasks: systemd.yml
-  become: yes
-  become_user: "{{ opennotificaties_podman_user }}"
 
 # load the nginx template
 - import_role:
