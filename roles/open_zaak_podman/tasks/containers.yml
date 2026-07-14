@@ -29,7 +29,7 @@
     env_file: "{{ openzaak_env_file }}"
     recreate: "{{ openzaak_env_file_template.changed }}"
     env:
-      UWSGI_PORT: "{{ item.port }}"
+      OPENZAAK_PORT: "{{ item.port }}"
       DB_HOST: "{{ openzaak_db_host }}"
       DB_PORT: "{{ openzaak_db_port | string }}"
       SECRET_KEY: "{{ openzaak_secret_key }}"
